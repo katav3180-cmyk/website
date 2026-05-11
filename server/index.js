@@ -20,9 +20,15 @@ if (envKey && envKey.includes("-----BEGIN PRIVATE KEY-----")) {
     client_email: process.env.FIREBASE_CLIENT_EMAIL,
   };
 } else {
-  // Використовуємо абсолютний шлях до файлу в корені проекту
-  const configPath = path.resolve(__dirname, "..", "serviceAccountKey.json.json");
-  serviceAccount = require(configPath);
+  try {
+    // Використовуємо абсолютний шлях до файлу в корені проекту
+    const configPath = path.resolve(__dirname, "..", "serviceAccountKey.json");
+    serviceAccount = require(configPath);
+  } catch (err) {
+    console.error(chalk.red("❌ ERROR: Firebase credentials not found!"));
+    console.error(chalk.yellow("Ensure FIREBASE_PRIVATE_KEY is set in environment variables or serviceAccountKey.json exists locally."));
+    process.exit(1);
+  }
 }
 
 const app = express();
