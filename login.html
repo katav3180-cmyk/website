@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Firebase Auth Helper</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 50px auto; text-align: center; line-height: 1.6; }
+        button { padding: 12px 24px; font-size: 16px; cursor: pointer; background: #4285F4; color: white; border: none; border-radius: 4px; transition: background 0.3s; }
+        button:hover { background: #357ae8; }
+        textarea { width: 100%; margin-top: 20px; font-family: monospace; padding: 10px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 4px; }
+        .note { color: #666; font-size: 0.9em; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Отримання токена авторизації</h1>
+    <p>Для роботи з API увійдіть через ваш корпоративний акаунт <code>@kadet.ukr.education</code></p>
+    
+    <div id="auth-container">
+        <button id="login-btn">Увійти через Google</button>
+    </div>
+
+    <div id="token-container" style="display:none;">
+        <h3>Ваш ID токен:</h3>
+        <textarea id="token-box" rows="12" readonly placeholder="Токен з'явиться тут..."></textarea>
+        <p class="note">Скопіюйте цей довгий рядок і використовуйте його в запитах як <b>Bearer токен</b>.</p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // !!! ВАЖЛИВО !!! 
+        // Вставте сюди ваш "firebaseConfig" з панелі керування Firebase (Project Settings -> General -> Your apps)
+        const firebaseConfig = {
+            apiKey: "AIzaSyCeqQ1SePBPKEavzjdNsmfVYvgOLehEQUA",
+            authDomain: "labroom-system.firebaseapp.com",
+            projectId: "labroom-system",
+            appId: "1:709287231753:web:2d2a70c718b13f06c313d8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        document.getElementById('login-btn').onclick = async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const token = await result.user.getIdToken();
+                document.getElementById('token-box').value = token;
+                document.getElementById('token-container').style.display = 'block';
+            } catch (e) {
+                if (e.code === 'auth/unauthorized-domain') {
+                    alert("Помилка: Цей домен не авторизований у Firebase Console. Додайте 'localhost' у розділі Authentication -> Settings -> Authorized domains.");
+                } else if (e.code === 'auth/operation-not-allowed') {
+                    alert("Помилка: Вхід через Google не увімкнено. Перейдіть у Firebase Console -> Authentication -> Sign-in method та увімкніть Google.");
+                } else {
+                    alert("Помилка авторизації: " + e.message);
+                }
+            }
+        };
+    </script>
+</body>
+</html>

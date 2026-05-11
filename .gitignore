@@ -1,0 +1,10 @@
+# Залежності
+node_modules/
+
+# Секрети та конфігурація
+.env
+serviceAccountKey*.json
+
+# Логи та системні файли
+npm-debug.log*
+.DS_Store
