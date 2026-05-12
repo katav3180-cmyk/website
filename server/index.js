@@ -280,7 +280,7 @@ app.delete("/records/:id", checkRole(['admin', 'teacher']), async (req, res) => 
 });
 
 app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "login.html"));
+  res.sendFile(path.resolve(__dirname, "..", "login.html"));
 });
 
 app.get("/", (req, res) => res.redirect("/docs"));
