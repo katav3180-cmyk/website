@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "college-lab-booking",
   "version": "1.6.0",
@@ -17,3 +18,23 @@
     "nodemon": "^3.0.1"
   }
 }
+=======
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node --env-file=.env server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.1.0"
+  }
+}
+>>>>>>> e5cfde3592da0d1ebe77638fff5540a6753e51e1

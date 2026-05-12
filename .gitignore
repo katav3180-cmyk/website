@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Node modules
 node_modules/
 
@@ -18,3 +19,15 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+=======
+# Залежності
+node_modules/
+
+# Секрети та конфігурація
+.env
+serviceAccountKey*.json
+
+# Логи та системні файли
+npm-debug.log*
+.DS_Store
+>>>>>>> e5cfde3592da0d1ebe77638fff5540a6753e51e1
