@@ -20,6 +20,126 @@ svg {
   --text-muted:  #64748b;
   --border:      #e2e8f0;
   --danger:      #ef4444;
+  --success:     #22c55e;
+  --warning:     #f59e0b;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: calc(100vh - 72px); /* Віднімаємо висоту шапки */
+}
+
+.sidebar {
+  background: #1e293b;
+  color: #fff;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-content {
+  background: var(--bg);
+  padding: 40px;
+  overflow-y: auto;
+}
+
+/* Липкий заголовок секції в адмінці */
+.admin-section-header {
+  position: sticky;
+  top: -40px; /* Компенсація падінгу main-content */
+  background: var(--bg);
+  padding: 10px 0 20px 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Tabs */
+.tabs-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab-btn {
+  padding: 12px 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+
+/* Admin Tables */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.admin-table th, .admin-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-table th {
+  background: #f8fafc;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-pending { background: #fef3c7; color: #92400e; }
+.badge-teacher { background: #dcfce7; color: #166534; }
+.badge-admin { background: #e0e7ff; color: #3730a3; }
+
+/* Expandable Row Styling */
+.expand-row {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.expand-row:hover { background: #f1f5f9; }
+
+.details-content {
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+  margin: 10px;
+}
+
+/* Registration Table Form */
+.reg-table-form {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.reg-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
 }
 
 /* ===== БАЗА ===== */
@@ -843,9 +963,9 @@ body.note-page {
 .month-block {
   display: grid;
   flex-shrink: 0;
-  /* gridTemplateColumns задається через JS */
-  grid-template-rows: 48px repeat(6, 1fr);
-  height: 100%;
+  /* gridTemplateColumns та gridTemplateRows задаються через JS */
+  height: max-content;
+  background: var(--bg-card);
 }
 
 /* Заголовок дня */
@@ -878,11 +998,7 @@ body.note-page {
   flex-direction: column;
   justify-content: space-between;
   gap: 6px;
-  min-height: 0;
-}
-
-.cell.weekend {
-  background: #f3f4f6;
+  height: 110px; /* Фіксована висота для стабільного вигляду */
 }
 
 .header.sunday,
@@ -1003,6 +1119,22 @@ body.note-page {
   color: var(--text);
   transition: background 0.15s, color 0.15s;
   user-select: none;
+}
+
+.slot-booked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px; /* Зберігаємо gap для внутрішніх елементів */
+  height: 42px; /* Фіксована висота для відповідності незаброньованим слотам */
+  padding: 0; /* Внутрішні відступи не потрібні при фіксованій висоті та центруванні */
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  background: #fff5f5;
+  cursor: default;
+  opacity: 1 !important;
+  position: relative;
 }
 
 .slots button:hover:not(:disabled) {
@@ -1817,6 +1949,24 @@ body.note-page {
   background: #fca5a5;
 }
 
+.mb-edit-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #e0e7ff;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  margin-right: 4px;
+}
+
+.mb-edit-btn:hover {
+  background: #c7d2fe;
+}
+
 /* ═══════════════════════════════════════════════════════════
    МОБІЛЬНИЙ ВИГЛЯД (≤768px)
    Горизонтальний скрол по днях, вертикальний по аудиторіях
@@ -2033,9 +2183,18 @@ body.note-page {
   gap: 8px;
 }
 
+.mob-pair-btn,
+.mob-pair-booked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px; /* Фіксована мінімальна висота для відповідності */
+  padding: 0; /* Внутрішні відступи не потрібні при фіксованій висоті та центруванні */
+}
+
 /* Кнопка пари — компактніший розмір */
 .mob-pair-btn {
-  padding: 16px 10px;
   background: var(--bg);
   border: 1.5px solid var(--border);
   border-radius: 12px;
@@ -2064,7 +2223,29 @@ body.note-page {
    АДАПТИВНІСТЬ ДЛЯ МОБІЛЬНИХ ПРИСТРОЇВ
 ═══════════════════════════════════════════════════════════ */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .sidebar {
+    padding: 12px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar h2 { display: none; }
+
+  .sidebar nav {
+    margin-top: 0 !important;
+    flex-direction: row !important;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .nav-btn { white-space: nowrap; }
+
   /* Загальні */
   .container {
     padding: 0 16px;
@@ -4004,4 +4185,29 @@ body.dark-theme .cell.cell-selected {
   background: rgba(139, 92, 246, 0.12);
   border-left-color: rgba(139, 92, 246, 0.5);
   border-right-color: rgba(139, 92, 246, 0.5);
+}
+
+/* Стилі для вибору викладача (Адмін) */
+.teacher-select-list {
+  max-height: 250px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 15px;
+}
+
+.teacher-option {
+  padding: 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.teacher-option:hover {
+  background: #eef2ff;
+  border-color: var(--accent);
+  color: var(--accent);
 }

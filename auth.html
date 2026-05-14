@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вхід — KEFK System</title>
+    <link rel="stylesheet" href="one.css">
+</head>
+<body class="home-page" style="display: flex; align-items: center; justify-content: center;">
+    <div class="login-modal" style="max-width: 600px;">
+        <h2>Реєстрація в системі</h2>
+        <p class="login-hint">Заповніть ваші дані в таблиці нижче для подання запиту на доступ.</p>
+        
+        <div class="reg-table-container">
+            <table class="admin-table reg-table-form">
+                <thead>
+                    <tr>
+                        <th>Поле</th>
+                        <th>Значення</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Аккаунт</strong></td>
+                        <td><button id="google-login" class="login-submit-btn">Увійти через Google</button></td>
+                    </tr>
+                    <tr id="name-row" style="display:none">
+                        <td><strong>ПІБ</strong></td>
+                        <td><input type="text" id="reg-name" class="reg-input" placeholder="Іванов І.І."></td>
+                    </tr>
+                    <tr id="status-row" style="display:none">
+                        <td><strong>Статус</strong></td>
+                        <td><span id="reg-status" class="badge badge-pending">Очікування схвалення</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="auth-actions" style="margin-top: 20px; display: none;">
+            <button class="login-submit-btn" onclick="submitRequest()">Надіслати запит адміну</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCeqQ1SePBPKEavzjdNsmfVYvgOLehEQUA",
+            authDomain: "labroom-system.firebaseapp.com",
+            projectId: "labroom-system",
+            appId: "1:709287231753:web:2d2a70c718b13f06c313d8"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        document.getElementById('google-login').onclick = async () => {
+            const result = await signInWithPopup(auth, provider);
+            const token = await result.user.getIdToken();
+            
+            // Перевіряємо статус на сервері
+            const res = await fetch('/me', { headers: { 'Authorization': `Bearer ${token}` } });
+            if (!res.ok) {
+                const errData = await res.json();
+                alert(errData.error || "Помилка доступу");
+                return;
+            }
+            const profile = await res.json();
+
+            if (profile.role === 'admin') window.location.href = 'admin.html';
+            else if (profile.role === 'teacher') window.location.href = 'note.html';
+            else {
+                document.getElementById('name-row').style.display = 'table-row';
+                document.getElementById('reg-name').value = profile.fullName || "";
+                document.getElementById('status-row').style.display = 'table-row';
+                document.getElementById('auth-actions').style.display = 'block';
+            }
+        };
+
+        window.submitRequest = () => {
+            // Оскільки запис у базі даних створюється автоматично зі статусом 'pending' 
+            // під час виклику /me на сервері, користувачу достатньо просто повідомити про успіх.
+            alert("Вашу заявку прийнято. Будь ласка, очікуйте на підтвердження адміністратором.");
+            window.location.href = 'zero.html';
+        };
+    </script>
+</body>
+</html>

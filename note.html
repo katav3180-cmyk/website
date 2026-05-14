@@ -11,37 +11,27 @@
 <body class="note-page">
 
 <!-- ═══ ШАПКА ═══ -->
-<header class="note-header">
-  <div class="note-header-left">
-    <a href="zero.html" class="rooms-back-btn">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 12H5M12 5l-7 7 7 7"/>
-      </svg>
-      <span class="back-btn-text">На головну</span>
-    </a>
-  </div>
+<header class="home-header">
+  <div class="home-nav">
+    <div class="home-header-left" style="display:flex; align-items:center; gap:15px;">
+      <a href="zero.html" class="rooms-back-btn" style="border:none; padding:8px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </a>
+      <div class="month-nav" style="border:none;">
+        <button class="month-arrow" id="prevMonth">&#8249;</button>
+        <button class="month-title-btn" id="monthTitle" onclick="openMonthPicker()"></button>
+        <button class="month-arrow" id="nextMonth">&#8250;</button>
+      </div>
+    </div>
 
-  <div class="month-nav">
-    <button class="month-arrow" id="prevMonth">&#8249;</button>
-    <button class="month-title-btn" id="monthTitle" onclick="openMonthPicker()"></button>
-    <button class="month-arrow" id="nextMonth">&#8250;</button>
-  </div>
-
-  <div class="note-header-right">
-    <button class="home-theme-btn" id="themeToggle" title="Змінити тему">
-      <svg id="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="5"/>
-        <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-      </svg>
-      <svg id="themeIconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-      </svg>
-    </button>
-    <div style="position:relative" id="authWrap">
-      <button class="nav-btn secondary-btn" id="openLogin">Вхід</button>
+    <div class="home-header-right">
+      <button class="home-theme-btn" id="themeToggle" title="Змінити тему">
+        <svg id="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg id="themeIconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <div style="position:relative" id="authWrap">
+        <button class="nav-btn secondary-btn" id="openLogin">Вхід</button>
+      </div>
     </div>
   </div>
 </header>
@@ -57,6 +47,21 @@
     Підтвердити бронювання
   </button>
 </footer>
+
+<!-- ═══ МОДАЛКА ВИБОРУ ВИКЛАДАЧА (АДМІН) ═══ -->
+<div id="adminTeacherOverlay" class="login-overlay" onclick="if(event.target===this)this.style.display='none'">
+  <div class="login-modal" style="max-width: 400px;">
+    <button class="login-close" onclick="document.getElementById('adminTeacherOverlay').style.display='none'">&#x2715;</button>
+    <h2 style="font-size: 20px; margin-bottom: 10px;">Для кого бронювання?</h2>
+    <div class="login-field">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="teacherSearch" placeholder="Пошук викладача..." autocomplete="off" oninput="filterTeachers(this.value)">
+    </div>
+    <div id="teacherList" class="teacher-select-list">
+      <!-- Сюди завантажаться викладачі -->
+    </div>
+  </div>
+</div>
 
 <!-- ═══ ПОПАП ПЗ ═══ -->
 <div id="sw-popup" class="sw-popup-overlay" onclick="if(event.target===this)this.style.display='none'">
@@ -78,39 +83,14 @@
   <div class="login-modal">
     <button class="login-close" onclick="closeLogin()">&#x2715;</button>
     <h2>Вхід до системи</h2>
-    <div class="login-field">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <input type="text" id="loginInput" placeholder="Логін / Пошта" autocomplete="off" />
-    </div>
-    <div class="login-field">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      <input type="password" id="passInput" placeholder="Пароль" />
-      <button class="eye-btn" id="eyeBtn" onclick="togglePass()" tabindex="-1">
-        <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      </button>
-    </div>
-    <div class="login-options">
-      <label class="login-remember"><input type="checkbox" id="rememberMe" /> Запам'ятати мене</label>
-      <a href="#" class="login-forgot">Забули пароль?</a>
-    </div>
-    <button class="login-submit-btn" onclick="submitLogin()">Увійти</button>
-    <p id="loginError" class="login-error-msg" style="display:none">Невірний логін або пароль</p>
-    <p class="login-hint">Для отримання облікових даних зверніться до Лаборанта</p>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 20px;">Увійдіть через ваш корпоративний акаунт <b>@kadet.ukr.education</b></p>
+    <button class="login-submit-btn" onclick="submitLogin()" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Увійти через Google
+    </button>
+    <p id="loginError" class="login-error-msg" style="display:none"></p>
+    <p class="login-hint" style="margin-top: 20px;">Якщо у вас виникли проблеми з доступом, зверніться до системного адміністратора</p>
   </div>
-</div>
-
-<!-- ═══ ДЕСКТОП CALENDAR POPUP ═══ -->
-<div id="deskCalPopup" class="desk-cal-popup">
-  <div class="desk-cal-header">
-    <button class="desk-cal-nav" id="deskCalPrev">&#8249;</button>
-    <span id="deskCalTitle"></span>
-    <button class="desk-cal-nav" id="deskCalNext">&#8250;</button>
-  </div>
-  <button class="desk-cal-today-btn" id="deskCalTodayBtn">Сьогодні</button>
-  <div class="desk-cal-weekdays">
-    <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Нд</span>
-  </div>
-  <div class="desk-cal-grid" id="deskCalGrid"></div>
 </div>
 
 <!-- ═══ МОДАЛКА ВИБОРУ ДНЯ (мобільна) ═══ -->
@@ -170,13 +150,140 @@
   </div>
 </div>
 
-<script>
-// ═══════════════════════════════════════════════════════════
-//  КОНСТАНТИ
-// ═══════════════════════════════════════════════════════════
-const ROOMS = ["84","83","82","81","80","68"];
-const SOFTWARE = {};
-fetch('software.json').then(r=>r.json()).then(d=>Object.assign(SOFTWARE,d)).catch(()=>{});
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onIdTokenChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCeqQ1SePBPKEavzjdNsmfVYvgOLehEQUA",
+    authDomain: "labroom-system.firebaseapp.com",
+    projectId: "labroom-system",
+    appId: "1:709287231753:web:2d2a70c718b13f06c313d8"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+// Автоматичне оновлення токена
+onIdTokenChanged(auth, async (user) => {
+  const session = window.getSession();
+  if (user && session) {
+    const token = await user.getIdToken();
+    session.idToken = token;
+    window.setSession(session);
+  }
+});
+
+window.getSession = function() {
+  try { return JSON.parse(localStorage.getItem('clSession')) || null; } catch { return null; }
+}
+window.setSession = function(u) { localStorage.setItem('clSession', JSON.stringify(u)); }
+window.clearSession = function() { localStorage.removeItem('clSession'); }
+
+window.openLogin = function() {
+  document.getElementById('loginOverlay').style.display = 'flex';
+}
+window.closeLogin = function() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+window.submitLogin = async function() {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const token = await result.user.getIdToken();
+    const response = await fetch('/me', { headers: { 'Authorization': 'Bearer ' + token } });
+    const profile = await response.json();
+
+    window.setSession({ 
+        login: profile.email, 
+        role: profile.role,
+        name: profile.fullName || profile.email || "Користувач", 
+        uid: profile.uid,
+        idToken: token 
+    });
+
+    if (profile.role === 'pending') {
+        window.location.href = 'auth.html';
+        return;
+    }
+
+    closeLogin();
+    location.reload();
+  } catch (e) {
+    document.getElementById('loginError').textContent = "Помилка входу: " + e.message;
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+const ROW_H = 110; // Константа висоти рядка для десктопа
+let _allTeachers = [];
+async function openAdminTeacherModal() {
+  const session = getSession();
+  if (!session || session.role !== 'admin') return;
+  
+  try {
+    const response = await fetch('/users', { headers: { 'Authorization': 'Bearer ' + session.idToken } });
+    const users = await response.json();
+    _allTeachers = users.filter(u => u.role === 'teacher');
+    renderTeacherList(_allTeachers);
+    document.getElementById('adminTeacherOverlay').style.display = 'flex';
+    document.getElementById('teacherSearch').focus();
+  } catch (e) { console.error(e); }
+}
+
+function renderTeacherList(list) {
+  const container = document.getElementById('teacherList');
+  container.innerHTML = list.map(t => `
+    <div class="teacher-option" onclick="processAdminBooking('${t.uid}', '${t.fullName}')">
+      ${t.fullName} <small style="display:block; font-weight:400; color:var(--text-muted)">${t.email}</small>
+    </div>
+  `).join('');
+  if (!list.length) container.innerHTML = '<p style="text-align:center; padding:20px; color:var(--text-muted)">Викладачів не знайдено</p>';
+}
+
+window.filterTeachers = function(query) {
+  const q = query.toLowerCase().trim();
+  const filtered = _allTeachers.filter(t => t.fullName.toLowerCase().includes(q) || t.email.toLowerCase().includes(q));
+  renderTeacherList(filtered);
+}
+
+window.processAdminBooking = async function(uid, name) {
+  document.getElementById('adminTeacherOverlay').style.display = 'none';
+  // Використовуємо існуючу логіку бронювання, але передаємо дані цільового викладача
+  window._targetAdminTeacher = { uid, name };
+  await performBooking();
+}
+
+let ROOMS = [];
+let SOFTWARE = {};
+async function loadSoftware() {
+  const session = getSession();
+  if (!session || !session.idToken) return;
+  try {
+    const [swRes, audRes] = await Promise.all([
+      fetch('/software', { headers: { 'Authorization': 'Bearer ' + session.idToken } }),
+      fetch('/auditory', { headers: { 'Authorization': 'Bearer ' + session.idToken } })
+    ]);
+    
+    const swData = await swRes.json();
+    const audData = await audRes.json();
+
+    if (swRes.ok && audRes.ok) {
+      const swMap = swData.reduce((acc, s) => { acc[s.id] = s.name + " " + s.version; return acc; }, {});
+      // Оновлюємо список номерів аудиторій динамічно
+      ROOMS = audData.map(a => a.roomNumber).sort((a, b) => a.localeCompare(b, undefined, {numeric: true}));
+      
+      SOFTWARE = audData.reduce((acc, a) => {
+        acc[a.roomNumber] = (a.softwareIds || []).map(id => swMap[id]).filter(name => name);
+        return acc;
+      }, {});
+      initGrid(); // Перемальовуємо сітку після отримання реальних аудиторій
+    }
+  } catch(e) { console.error("Error loading software", e); }
+}
+loadSoftware();
 
 const MONTH_NAMES = ["Січень","Лютий","Березень","Квітень","Травень","Червень",
                      "Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"];
@@ -222,8 +329,12 @@ const selectedSlots = new Map();
 // ── Кеш бронювань ──
 let cachedBookings = [];
 async function loadBookings() {
+  const session = getSession();
+  if (!session) return;
   try {
-    const r = await fetch('/api/bookings');
+    const r = await fetch('/records', {
+      headers: { 'Authorization': 'Bearer ' + session.idToken }
+    });
     cachedBookings = await r.json();
   } catch(e) { cachedBookings = []; }
 }
@@ -268,6 +379,7 @@ function buildMonthBlock(year, month) {
   block.dataset.year = year;
   block.dataset.month = month;
   block.style.gridTemplateColumns = `repeat(${days.length}, ${COL_W}px)`;
+  block.style.gridTemplateRows = `48px repeat(${ROOMS.length}, ${ROW_H}px)`;
 
   days.forEach(day => {
     const h = document.createElement('div');
@@ -306,13 +418,25 @@ function buildMonthBlock(year, month) {
       const slots = document.createElement('div');
       slots.className = 'slots';
       for (let i = 0; i < 4; i++) {
-        const btn = document.createElement('button');
         const key = slotKey(day.dateStr, room, i);
+        const booking = cachedBookings.find(b => b.data === day.dateStr && b.auditoryId === room && b.number === (i + 1).toString());
 
-        btn.innerText = i + 1;
-        if (selectedSlots.has(key)) btn.classList.add('active');
-        btn.onclick = () => toggleSlot(btn, day.dateStr, room, i);
-        slots.appendChild(btn);
+        if (booking) {
+          const booked = document.createElement('div');
+          booked.className = 'slot-booked';
+          // Додаємо ім'я викладача у підказку та обробник кліку
+          booked.title = `Заброньовано: ${booking.userName || 'Інформація відсутня'}`;
+          booked.style.cursor = 'pointer';
+          booked.onclick = () => alert(`Цю пару забронював(ла): ${booking.userName || 'невідомий користувач'}`);
+          booked.innerHTML = `<div class="slot-lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="slot-num">${i+1}</div>`;
+          slots.appendChild(booked);
+        } else {
+          const btn = document.createElement('button');
+          btn.innerText = i + 1;
+          if (selectedSlots.has(key)) btn.classList.add('active');
+          btn.onclick = () => toggleSlot(btn, day.dateStr, room, i);
+          slots.appendChild(btn);
+        }
       }
 
       cell.appendChild(lbl); 
@@ -371,13 +495,26 @@ function buildMobileMonth(year, month) {
       grid.className = 'mob-pairs-grid';
 
       for (let i = 0; i < 4; i++) {
-        const btn = document.createElement('button');
         const key = slotKey(day.dateStr, room, i);
-        btn.className = 'mob-pair-btn';
-        btn.textContent = PAIR_NAMES[i];
-        if (selectedSlots.has(key)) btn.classList.add('active');
-        btn.onclick = () => toggleSlot(btn, day.dateStr, room, i);
-        grid.appendChild(btn);
+        const booking = cachedBookings.find(b => b.data === day.dateStr && b.auditoryId === room && b.number === (i + 1).toString());
+
+        if (booking) {
+          const bDiv = document.createElement('div');
+          bDiv.className = 'mob-pair-btn mob-pair-booked';
+          // Обробник кліку для мобільної версії
+          bDiv.onclick = () => alert(`Заброньовано: ${booking.userName || 'Викладач'}`);
+          bDiv.innerHTML = 
+            `<div class="mob-slot-lock"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> ${PAIR_NAMES[i]}</div>` +
+            `<div class="mob-slot-teacher">${booking.userName || ''}</div>`;
+          grid.appendChild(bDiv);
+        } else {
+          const btn = document.createElement('button');
+          btn.className = 'mob-pair-btn';
+          btn.textContent = PAIR_NAMES[i];
+          if (selectedSlots.has(key)) btn.classList.add('active');
+          btn.onclick = () => toggleSlot(btn, day.dateStr, room, i);
+          grid.appendChild(btn);
+        }
       }
 
       card.appendChild(grid);
@@ -436,7 +573,8 @@ function appendNextMonth() {
 // ═══════════════════════════════════════════════════════════
 function isMobile() { return window.innerWidth <= 768; }
 
-function initGrid() {
+async function initGrid() {
+  await loadBookings(); // Спочатку завантажуємо записи
   const wrapper = document.getElementById('wrapper');
   wrapper.innerHTML = '';
   loadedMonths = [];
@@ -542,6 +680,7 @@ function showSoftware(room) {
   document.getElementById('sw-popup').style.display = 'flex';
   setTimeout(() => document.getElementById('sw-search-input').focus(), 50);
 }
+window.showSoftware = showSoftware;
 
 function renderSoftwareList(list) {
   document.getElementById('sw-popup-body').innerHTML = (!list || !list.length)
@@ -549,7 +688,7 @@ function renderSoftwareList(list) {
     : list.map(s => `<div class="sw-item">${s}</div>`).join('');
 }
 
-function filterSoftware(query) {
+window.filterSoftware = function(query) {
   const q = query.trim().toLowerCase();
   if (!q) { 
     renderSoftwareList(currentSwList); 
@@ -562,64 +701,55 @@ function filterSoftware(query) {
 // ═══════════════════════════════════════════════════════════
 //  ПІДТВЕРДЖЕННЯ БРОНЮВАННЯ → зберігаємо в bookings.json
 // ═══════════════════════════════════════════════════════════
-document.getElementById('confirmBtn').addEventListener('click', async () => {
+document.getElementById('confirmBtn').addEventListener('click', () => {
   const session = getSession();
   if (!session) { openLogin(); return; }
-  if (!selectedSlots.size) return;
+  
+  if (session.role === 'admin') {
+    openAdminTeacherModal();
+  } else {
+    performBooking();
+  }
+});
 
-  // Завантажуємо поточні бронювання
-  let existing = [];
-  try {
-    const r = await fetch('/api/bookings');
-    existing = await r.json();
-  } catch(e) { existing = []; }
-
+async function performBooking() {
+  const session = getSession();
+  const target = window._targetAdminTeacher || null;
   const newBookings = [];
   for (const [, slot] of selectedSlots) {
-    // Перевіряємо чи вже не зайнято
-    const conflict = existing.find(b =>
-      b.date === slot.dateStr &&
-      b.room === slot.room &&
-      b.pairIndex === slot.pairIdx
-    );
-    if (conflict) continue;
+    const recordId = "rec_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+    const recordData = {
+      id: recordId,
+      data: slot.dateStr,
+      number: (slot.pairIdx + 1).toString(),
+      auditoryId: slot.room
+    };
 
-    newBookings.push({
-      date:         slot.dateStr,
-      room:         slot.room,
-      pairIndex:    slot.pairIdx,
-      pairName:     PAIR_NAMES[slot.pairIdx],
-      time:         PAIR_TIMES[slot.pairIdx],
-      teacherLogin: session.login,
-      teacherName:  session.name,
-      id:           Date.now() + Math.random()
-    });
+    if (target) {
+      recordData.targetUserId = target.uid;
+      recordData.targetUserName = target.name;
+    }
+
+    try {
+      await fetch('/records', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + session.idToken
+        },
+        body: JSON.stringify(recordData)
+      });
+      newBookings.push({ ...recordData, room: slot.room, pairName: PAIR_NAMES[slot.pairIdx], date: slot.dateStr, userName: target ? target.name : session.name });
+    } catch(e) { console.error("Error saving record", e); }
   }
 
-  const merged = [...existing, ...newBookings];
-  // Оновлюємо кеш
-  cachedBookings = merged;
-
-  try {
-    await fetch('/api/bookings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(merged, null, 2)
-    });
-  } catch(e) {
-    alert('Помилка збереження. Перевірте з\'єднання з сервером.');
-    return;
-  }
-
-  // Показуємо модалку успіху
+  await initGrid();
   showBookingSuccess(newBookings);
-
-  // Скидаємо вибір
   selectedSlots.clear();
+  window._targetAdminTeacher = null;
   updateConfirmBtn();
-  // Знімаємо .active з усіх кнопок (десктоп + мобільний)
   document.querySelectorAll('.slots button.active, .mob-pair-btn.active').forEach(b => b.classList.remove('active'));
-});
+}
 
 // ═══════════════════════════════════════════════════════════
 //  МОДАЛКА УСПІХУ
@@ -658,6 +788,7 @@ function showBookingSuccess(bookings) {
 function closeBookingSuccess() {
   document.getElementById('bookingSuccessOverlay').style.display = 'none';
 }
+window.closeBookingSuccess = closeBookingSuccess;
 
 function pairWord(n) {
   if (n === 1) return 'пару';
@@ -669,14 +800,15 @@ function pairWord(n) {
 //  MONTH PICKER
 // ═══════════════════════════════════════════════════════════
 let mpYear = current.getFullYear();
+window.mpYear = mpYear;
 
-function openMonthPicker() {
+window.openMonthPicker = function() {
   mpYear = current.getFullYear();
   renderMonthPicker();
   document.getElementById('monthPickerOverlay').style.display = 'flex';
 }
 
-function closeMonthPicker() {
+window.closeMonthPicker = function() {
   document.getElementById('monthPickerOverlay').style.display = 'none';
 }
 
@@ -699,7 +831,7 @@ function renderMonthPicker() {
   });
 }
 
-function goToToday() {
+window.goToToday = function() {
   current = new Date(); current.setDate(1);
   closeMonthPicker();
   initGrid();
@@ -724,13 +856,13 @@ async function openMyBookings() {
 
   let allBookings = [];
   try {
-    const r = await fetch('/api/bookings');
+    const r = await fetch('/records', {
+      headers: { 'Authorization': 'Bearer ' + session.idToken }
+    });
     allBookings = await r.json();
   } catch(e) {}
 
-  const mine = allBookings
-    .filter(b => b.teacherLogin === session.login)
-    .sort((a, b) => a.date.localeCompare(b.date) || a.pairIndex - b.pairIndex);
+  const mine = allBookings.sort((a, b) => a.data.localeCompare(b.data) || a.number - b.number);
 
   const n = mine.length;
   document.getElementById('myBookingsCount').textContent =
@@ -743,7 +875,7 @@ async function openMyBookings() {
     listEl.innerHTML = '<p class="mb-empty">У вас ще немає бронювань</p>';
   } else {
     mine.forEach(b => {
-      const d = new Date(b.date + 'T00:00:00');
+      const d = new Date(b.data + 'T00:00:00');
       const dateLabel = `${DAY_NAMES[d.getDay()]}, ${d.getDate()} ${MONTH_NAMES_GEN[d.getMonth()]} ${d.getFullYear()} р.`;
 
       const item = document.createElement('div');
@@ -754,11 +886,11 @@ async function openMyBookings() {
           `<div class="mb-meta">` +
             `<span class="mb-pair">` +
               `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>` +
-              `${b.pairName}` +
+              `${b.number} пара` +
             `</span>` +
             `<span class="mb-room">` +
               `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>` +
-              `Ауд. ${b.room}` +
+              `Ауд. ${b.auditoryId}` +
             `</span>` +
           `</div>` +
         `</div>` +
@@ -774,29 +906,19 @@ async function openMyBookings() {
   document.getElementById('myBookingsOverlay').style.display = 'flex';
 }
 
-function closeMyBookings() {
+window.closeMyBookings = function() {
   document.getElementById('myBookingsOverlay').style.display = 'none';
 }
 
 async function deleteBooking(bookingId, itemEl) {
-  let allBookings = [];
+  const session = getSession();
+  if (!session) return;
   try {
-    const r = await fetch('/api/bookings');
-    allBookings = await r.json();
-  } catch(e) { return; }
-
-  const updated = allBookings.filter(b => String(b.id) !== String(bookingId));
-
-  try {
-    await fetch('/api/bookings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated, null, 2)
+    await fetch('/records/' + bookingId, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + session.idToken }
     });
-  } catch(e) { 
-    alert('Помилка видалення'); 
-    return; 
-  }
+  } catch(e) { alert('Помилка видалення'); return; }
 
   itemEl.style.transition = 'opacity 0.2s, transform 0.2s';
   itemEl.style.opacity = '0';
@@ -999,21 +1121,6 @@ const MONTH_NAMES_UA = ['Січень','Лютий','Березень','Квіт
 
 function openDayPicker(year, month) {
   const overlay = document.getElementById('dayPickerOverlay');
-  const title   = document.getElementById('dayPickerTitle');
-
-  // Зберігаємо поточний місяць в overlay для навігації
-  overlay._year  = year;
-  overlay._month = month;
-
-  renderDayPickerGrid(year, month);
-  title.textContent = MONTH_NAMES_UA[month] + ' ' + year;
-
-  overlay.style.display = 'flex';
-  requestAnimationFrame(() => overlay.classList.add('dp-open'));
-}
-
-function openDayPicker(year, month) {
-  const overlay = document.getElementById('dayPickerOverlay');
   overlay._year  = year;
   overlay._month = month;
   overlay._loadedMonths = [];
@@ -1158,7 +1265,7 @@ function renderDayPickerGrid(year, month) {
   overlay._month = month;
 }
 
-function closeDayPicker() {
+window.closeDayPicker = function() {
   const overlay = document.getElementById('dayPickerOverlay');
   overlay.classList.remove('dp-open');
   setTimeout(() => { overlay.style.display = 'none'; }, 280);
@@ -1207,7 +1314,7 @@ function scrollToDate(dateStr) {
   navigateToMonth(y, m - 1, dateStr);
 }
 
-function dpGoToday() {
+window.dpGoToday = function() {
   const today = new Date();
   const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
   // Оновлюємо обраний день на сьогодні
@@ -1244,7 +1351,7 @@ function dpGoToday() {
   }
 }
 
-function dpNavigate(dir) {
+window.dpNavigate = function(dir) {
   const overlay = document.getElementById('dayPickerOverlay');
   let year  = overlay._year;
   let month = overlay._month + dir;
@@ -1278,86 +1385,6 @@ function navigateToMonth(year, month, targetDate) {
     }
   }
 }
-
-// ═══════════════════════════════════════════════════════════
-//  АВТОРИЗАЦІЯ
-// ═══════════════════════════════════════════════════════════
-const USERS = [
-  { login: 'admin',    password: 'admin123', role: 'admin',   name: 'Адміністратор' },
-  { login: 'aushev',   password: '123',      role: 'teacher', name: 'Аушев М.О' },
-  { login: 'petrenko', password: '123',      role: 'teacher', name: 'Петренко Ю.О' },
-];
-function getSession()  { try { return JSON.parse(localStorage.getItem('clSession'))||null; } catch { return null; } }
-function setSession(u) { localStorage.setItem('clSession', JSON.stringify(u)); }
-function clearSession(){ localStorage.removeItem('clSession'); }
-function openLogin()   { document.getElementById('loginOverlay').style.display='flex'; document.getElementById('loginInput').focus(); }
-function closeLogin()  { document.getElementById('loginOverlay').style.display='none'; document.getElementById('loginError').style.display='none'; }
-function togglePass()  { const i=document.getElementById('passInput'); i.type=i.type==='password'?'text':'password'; }
-function submitLogin() {
-  const login = document.getElementById('loginInput').value.trim();
-  const pass  = document.getElementById('passInput').value;
-  const user  = USERS.find(u=>u.login===login&&u.password===pass);
-  if (user) { setSession({login:user.login,role:user.role,name:user.name}); closeLogin(); updateLoginBtn(); }
-  else document.getElementById('loginError').style.display='block';
-}
-document.getElementById('passInput').addEventListener('keydown', e => { if(e.key==='Enter') submitLogin(); });
-
-function updateLoginBtn() {
-  const session = getSession();
-  const btn  = document.getElementById('openLogin');
-  const wrap = document.getElementById('authWrap');
-  const old  = document.getElementById('userDropdown'); if (old) old.remove();
-
-  if (session) {
-    btn.className = 'home-avatar-btn';
-    btn.innerHTML = `
-      <span class="home-avatar-letter">${session.name.charAt(0).toUpperCase()}</span>
-      <span class="home-avatar-name">${session.name}</span>
-      <svg class="home-avatar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
-    btn.title = session.name;
-
-    const drop = document.createElement('div');
-    drop.id = 'userDropdown'; drop.className = 'user-dropdown';
-    drop.innerHTML = `
-      <div class="user-dropdown-info">
-        <div class="user-dropdown-name">${session.name}</div>
-        <div class="user-dropdown-login">@${session.login}</div>
-      </div>
-      <button class="user-dropdown-item" id="dropTheme">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="5"/>
-          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-        Змінити тему
-      </button>
-      <button class="user-dropdown-item" id="dropMyBookings">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        Мої записи
-      </button>
-      <button class="user-dropdown-item danger" id="dropLogout">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Вийти
-      </button>`;
-    wrap.appendChild(drop);
-    btn.onclick = e => { e.preventDefault(); e.stopPropagation(); drop.classList.toggle('open'); };
-    drop.querySelector('#dropTheme').onclick    = () => { drop.classList.remove('open'); applyTheme(!document.body.classList.contains('dark-theme')); };
-    drop.querySelector('#dropMyBookings').onclick = () => { drop.classList.remove('open'); openMyBookings(); };
-    drop.querySelector('#dropLogout').onclick   = () => { clearSession(); location.reload(); };
-    setTimeout(() => {
-      document.addEventListener('click', function h(e) { if (!wrap.contains(e.target)) { drop.classList.remove('open'); document.removeEventListener('click', h); } });
-    }, 0);
-  } else {
-    btn.className = 'nav-btn secondary-btn';
-    btn.textContent = 'Вхід';
-    btn.title = '';
-    btn.onclick = openLogin;
-    document.querySelector('#themeToggle').style.display = 'flex';
-  }
-}
-updateLoginBtn();
 
 // Перебудова при зміні розміру
 let resizeTimer;

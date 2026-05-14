@@ -34,6 +34,57 @@ if (envKey && envKey.includes("-----BEGIN PRIVATE KEY-----")) {
 const app = express();
 app.use(express.json());
 
+// --- Middleware для перевірки автентифікації та прав доступу ---
+const checkRole = (allowedRoles) => {
+  return async (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: "Відсутній або невірний токен авторизації" });
+    }
+
+    const idToken = authHeader.split('Bearer ')[1];
+
+    try {
+      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      const { uid, email, name } = decodedToken;
+      
+      let userDoc = await db.collection('users').doc(uid).get();
+
+      if (!userDoc.exists) {
+        if (!email || !email.endsWith(ALLOWED_EMAIL_DOMAIN)) {
+          return res.status(403).json({ error: `Доступ дозволено лише для домену ${ALLOWED_EMAIL_DOMAIN}` });
+        }
+
+        const usersSnapshot = await db.collection('users').limit(1).get();
+        const isFirstUser = usersSnapshot.empty;
+
+        const userData = {
+          uid,
+          email,
+          fullName: name || "Користувач",
+          role: isFirstUser ? "admin" : "pending",
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        };
+        await db.collection('users').doc(uid).set(userData);
+        req.user = userData;
+      } else {
+        req.user = { uid, ...userDoc.data() };
+      }
+
+      if (allowedRoles.includes(req.user.role)) {
+        next();
+      } else {
+        return res.status(403).json({ error: `Ваша роль (${req.user.role}) не має доступу` });
+      }
+    } catch (err) {
+      return res.status(401).json({ error: "Недійсний токен" });
+    }
+  };
+};
+
+// Статична роздача файлів (HTML, CSS, JS) з кореневої папки (на рівень вище папки server)
+app.use(express.static(path.join(__dirname, "..")));
+
 // --- Middleware для логування кожного запиту ---
 app.use((req, res, next) => {
   const start = Date.now();
@@ -139,83 +190,60 @@ app.get("/docs", (req, res) => {
   res.send(apiDocs);
 });
 
-// Middleware для перевірки автентифікації та прав доступу
-const checkRole = (allowedRoles) => {
-  return async (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: "Відсутній або невірний токен авторизації" });
-    }
+// Отримання списку всіх аудиторій
+app.get("/auditory", checkRole(['admin', 'teacher']), async (req, res) => {
+  const snapshot = await db.collection("auditory").get();
+  res.json(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+});
 
-    const idToken = authHeader.split('Bearer ')[1];
+// Отримання всіх записів
+app.get("/records", checkRole(['admin', 'teacher']), async (req, res) => {
+  try {
+    const snapshot = await db.collection("records").get();
+    const records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(records);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
-    try {
-      // Верифікація токена через Firebase Admin SDK
-      const decodedToken = await admin.auth().verifyIdToken(idToken);
-      const { uid, email, name } = decodedToken;
-      
-      console.log(chalk.blue(`[AUTH] Верифікація токена для: ${chalk.bold(email || uid)}`));
-
-      let userDoc = await db.collection('users').doc(uid).get();
-
-      if (!userDoc.exists) {
-        if (!email || !email.endsWith(ALLOWED_EMAIL_DOMAIN)) {
-          console.log(chalk.red(`[AUTH] Відмовлено: невірний домен ${email}`));
-          return res.status(403).json({ error: `Доступ дозволено лише для домену ${ALLOWED_EMAIL_DOMAIN}` });
-        }
-
-        // Логіка автоматичного призначення адміна першому користувачу
-        const usersSnapshot = await db.collection('users').limit(1).get();
-        const isFirstUser = usersSnapshot.empty;
-
-        const userData = {
-          uid,
-          email,
-          fullName: name || "Користувач",
-          role: isFirstUser ? "admin" : "pending",
-          createdAt: admin.firestore.FieldValue.serverTimestamp()
-        };
-        await db.collection('users').doc(uid).set(userData);
-        console.log(chalk.yellow(`[DB] Створено користувача: ${uid} з роллю ${userData.role}`));
-        req.user = userData;
-      } else {
-        req.user = { uid, ...userDoc.data() };
-      }
-
-      if (allowedRoles.includes(req.user.role)) {
-        console.log(chalk.green(`[AUTH] Доступ дозволено. Роль: ${req.user.role}`));
-        next();
-      } else {
-        console.log(chalk.red(`[AUTH] Доступ заборонено для ролі: ${req.user.role}. Потрібно: ${allowedRoles}`));
-        return res.status(403).json({ error: `Ваша роль (${req.user.role}) не має доступу до цього ресурсу` });
-      }
-    } catch (err) {
-      console.error(chalk.bgRed.white(" AUTH ERROR "), chalk.red(err.message));
-      return res.status(401).json({ error: "Недійсний токен" });
-    }
-  };
-};
-
+// Отримання профілю поточного користувача
+app.get("/me", checkRole(['admin', 'teacher', 'pending']), (req, res) => {
+  res.json(req.user);
+});
 // --- РОБОТА З КОРИСТУВАЧАМИ ---
 app.get("/users", checkRole(['admin']), async (req, res) => {
   try {
     const snapshot = await db.collection("users").get();
-    const users = snapshot.docs.map(doc => doc.data());
+    const users = snapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// --- ПІДТВЕРДЖЕННЯ РОЛІ (Тільки Адмін) ---
-app.patch("/users/approve/:id", checkRole(['admin']), async (req, res) => {
+// --- КЕРУВАННЯ КОРИСТУВАЧАМИ (Тільки Адмін) ---
+app.patch("/users/role/:id", checkRole(['admin']), async (req, res) => {
   try {
-    await db.collection("users").doc(req.params.id).update({ role: "teacher" });
-    console.log(chalk.cyan(`[ADMIN] Роль користувача ${req.params.id} змінена на teacher`));
+    const { role } = req.body;
+    if (!['admin', 'teacher', 'pending'].includes(role)) {
+      return res.status(400).json({ error: "Невірна роль" });
+    }
+    await db.collection("users").doc(req.params.id).update({ role });
+    console.log(chalk.cyan(`[ADMIN] Роль користувача ${req.params.id} змінена на ${role}`));
     res.json({ status: "success" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+app.delete("/users/:id", checkRole(['admin']), async (req, res) => {
+  try {
+    await db.collection("users").doc(req.params.id).delete();
+    await admin.auth().deleteUser(req.params.id);
+    console.log(chalk.red(`[ADMIN] Користувача видалено: ${req.params.id}`));
+    res.json({ status: "deleted" });
+  } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
 // --- SOFTWARE: - Тільки Адмін ---
@@ -253,18 +281,42 @@ app.post("/auditory", checkRole(['admin', 'teacher']), async (req, res) => {
   }
 });
 
+app.patch("/auditory/:id", checkRole(['admin']), async (req, res) => {
+  try {
+    const { roomNumber, name, softwareIds } = req.body;
+    const updateData = {};
+    if (roomNumber !== undefined) updateData.roomNumber = roomNumber;
+    if (name !== undefined) updateData.name = name;
+    if (softwareIds !== undefined) updateData.softwareIds = softwareIds;
+    await db.collection("auditory").doc(req.params.id).update(updateData);
+    res.json({ status: "updated" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // --- 5. RECORDS: (data, number, id) - Адмін + Викладач ---
 app.post("/records", checkRole(['admin', 'teacher']), async (req, res) => {
   try {
     const { data, number, id, auditoryId } = req.body;
     if (!id) return res.status(400).json({ error: "Field 'id' is required!" });
 
+    let targetUserId = req.user.uid;
+    let targetUserName = req.user.fullName || "Викладач";
+
+    // Якщо адміністратор записує іншого викладача
+    if (req.user.role === 'admin' && req.body.targetUserId && req.body.targetUserName) {
+      targetUserId = req.body.targetUserId;
+      targetUserName = req.body.targetUserName;
+    }
+
     const recordData = {
       id,
       data,
       number,
       auditoryId,
-      userId: req.user.uid, // Автоматично прив'язуємо до поточного користувача
+      userId: targetUserId,
+      userName: targetUserName,
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     };
 
@@ -317,7 +369,10 @@ app.get("/login", (req, res) => {
   res.sendFile(path.resolve(__dirname, "..", "login.html"));
 });
 
-app.get("/", (req, res) => res.redirect("/docs"));
+// Головна сторінка — тепер віддаємо zero.html замість редиректу на документацію
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "zero.html"));
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

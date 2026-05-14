@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Адмін-панель KEFK</title>
+    <link rel="stylesheet" href="one.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="home-page">
+    <!-- ШАПКА ЯК НА ZERO -->
+    <header class="home-header">
+        <div class="home-nav">
+            <div class="home-logo">
+                <div class="home-logo-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <span>KEFK Admin</span>
+            </div>
+            <div class="home-header-right">
+                <button class="home-theme-btn" id="themeToggle" title="Змінити тему">
+                    <svg id="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    <svg id="themeIconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+                <div style="position:relative" id="authWrap">
+                    <button class="nav-btn secondary-btn" id="openLogin">Вхід</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <nav style="margin-top: 40px; display: flex; flex-direction: column; gap: 10px;">
+                <button class="nav-btn secondary-btn active" id="btn-users" onclick="showTab('users')">👥 Користувачі</button>
+                <button class="nav-btn secondary-btn" id="btn-software" onclick="showTab('software')">💿 Програми</button>
+                <button class="nav-btn secondary-btn" id="btn-auditories" onclick="showTab('auditories')">🏫 Аудиторії</button>
+                <button class="nav-btn secondary-btn" id="btn-records" onclick="showTab('records')">🗓️ Всі записи</button>
+                <a href="zero.html" class="nav-btn secondary-btn">На головну</a>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <div id="users-section" class="tab-content">
+                <div class="admin-section-header">
+                    <h1>Користувачі</h1>
+                    <div class="badge badge-admin">Керування доступом</div>
+                </div>
+                <table class="admin-table" id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Ім'я</th>
+                            <th>Email</th>
+                            <th>Роль</th>
+                            <th>Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-list"></tbody>
+                </table>
+            </div>
+
+            <div id="software-section" class="tab-content" style="display:none;">
+                <div class="admin-section-header">
+                    <h1>Програмне забезпечення</h1>
+                    <button class="card-btn primary-action" onclick="addSoftware()">+ Додати ПЗ</button>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>ID</th><th>Назва</th><th>Версія</th><th>Дії</th></tr>
+                    </thead>
+                    <tbody id="software-list"></tbody>
+                </table>
+            </div>
+
+            <div id="auditories-section" class="tab-content" style="display:none;">
+                <div class="admin-section-header">
+                    <h1>Аудиторії</h1>
+                    <button class="card-btn primary-action" onclick="addAuditory()">+ Додати аудиторію</button>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>Аудиторія</th><th>ПЗ (виберіть декілька)</th><th>Дії</th></tr>
+                    </thead>
+                    <tbody id="auditories-list"></tbody>
+                </table>
+            </div>
+
+            <div id="records-section" class="tab-content" style="display:none;">
+                <div class="admin-section-header">
+                    <h1>Всі записи бронювання</h1>
+                </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Ауд.</th>
+                            <th>Пара</th>
+                            <th>Викладач</th>
+                            <th>Дії</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records-list"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Модальне вікно редагування ПЗ -->
+    <div id="sw-edit-overlay" class="login-overlay" onclick="if(event.target===this)closeSwModal()">
+        <div class="login-modal" style="max-width: 400px;">
+            <button class="login-close" onclick="closeSwModal()">&#x2715;</button>
+            <h2 id="sw-modal-title">Редагувати ПЗ</h2>
+            <div class="login-field">
+                <input type="text" id="edit-sw-name" placeholder="Назва ПЗ" autocomplete="off">
+            </div>
+            <div class="login-field">
+                <input type="text" id="edit-sw-version" placeholder="Версія" autocomplete="off">
+            </div>
+            <input type="hidden" id="edit-sw-id">
+            <button class="login-submit-btn" onclick="saveSwEdit()">Зберегти зміни</button>
+        </div>
+    </div>
+
+    <!-- Модальне вікно редагування/додавання Аудиторії -->
+    <div id="aud-edit-overlay" class="login-overlay" onclick="if(event.target===this)closeAudModal()">
+        <div class="login-modal" style="max-width: 400px;">
+            <button class="login-close" onclick="closeAudModal()">&#x2715;</button>
+            <h2 id="aud-modal-title">Редагувати Аудиторію</h2>
+            <div class="login-field">
+                <input type="text" id="edit-aud-roomNumber" placeholder="Номер аудиторії (наприклад, 84)" autocomplete="off">
+            </div>
+            <div class="login-field">
+                <input type="text" id="edit-aud-name" placeholder="Опис/Назва (наприклад, Кабінет інформатики)" autocomplete="off">
+            </div>
+            <input type="hidden" id="edit-aud-id">
+            <button class="login-submit-btn" onclick="saveAudEdit()">Зберегти зміни</button>
+        </div>
+    </div>
+
+    <!-- Модальне вікно вибору ПЗ для додавання в аудиторію -->
+    <div id="add-sw-overlay" class="login-overlay" onclick="if(event.target===this)closeAddSwModal()">
+        <div class="login-modal" style="max-width: 450px;">
+            <button class="login-close" onclick="closeAddSwModal()">&#x2715;</button>
+            <h2>Додати ПЗ до аудиторії</h2>
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">Виберіть програми зі списку доступних:</p>
+            <div id="add-sw-list" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 12px; padding: 10px;">
+                <!-- Список чекбоксів з ПЗ -->
+            </div>
+            <input type="hidden" id="add-sw-aud-id">
+            <button class="login-submit-btn" onclick="saveAddSwToAud()">Додати вибране</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCeqQ1SePBPKEavzjdNsmfVYvgOLehEQUA",
+            authDomain: "labroom-system.firebaseapp.com",
+            projectId: "labroom-system",
+            appId: "1:709287231753:web:2d2a70c718b13f06c313d8"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        async function apiRequest(path, method = 'GET', body = null) {
+            const user = auth.currentUser;
+            if (!user) {
+                console.warn("API Request aborted: No user logged in");
+                throw new Error("Необхідно увійти в систему");
+            }
+            const token = await user.getIdToken();
+            const options = {
+                method,
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+            };
+            if (body) options.body = JSON.stringify(body);
+            const res = await fetch(path, options);
+            
+            const contentType = res.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.error || `Помилка сервера: ${res.status} ${res.statusText}`);
+                }
+                return data;
+            } else {
+                const text = await res.text();
+                console.error("Server responded with non-JSON:", text);
+                throw new Error(`Помилка сервера: ${res.status} ${res.statusText}. Очікувався JSON.`);
+            }
+        }
+
+        window.showTab = (tab) => {
+            document.querySelectorAll('.tab-content').forEach(s => s.style.display = 'none');
+            document.querySelectorAll('.sidebar .nav-btn').forEach(b => b.classList.remove('primary-action'));
+            
+            document.getElementById(`${tab}-section`).style.display = 'block';
+            document.getElementById(`btn-${tab}`).classList.add('primary-action');
+
+            if (tab === 'users') loadUsers();
+            if (tab === 'software') loadSoftware();
+            if (tab === 'auditories') loadAuditories();
+            if (tab === 'records') loadAllRecords();
+        };
+
+        async function loadUsers() {
+            try {
+                const users = await apiRequest('/users');
+                const list = document.getElementById('users-list');
+                list.innerHTML = users.map(u => `
+                <tr class="expand-row" onclick="toggleDetails('${u.uid}')">
+                    <td>${u.fullName}</td>
+                    <td>${u.email}</td>
+                    <td>
+                        ${u.role === 'pending' ? `
+                            <button onclick="approveUser('${u.uid}')" class="badge badge-pending" style="border:none; cursor:pointer; outline:none; padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 600;">Схвалити</button>
+                        ` : `
+                            <select onchange="updateUserRole('${u.uid}', this.value)" class="badge badge-${u.role}" style="border:none; cursor:pointer; outline:none;">
+                                <option value="teacher" ${u.role === 'teacher' ? 'selected' : ''}>Викладач</option>
+                                <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Адмін</option>
+                            </select>
+                        `}
+                    </td>
+                    <td>
+                        <button onclick="deleteUser('${u.uid}')" class="mb-delete-btn" title="Видалити">🗑️</button>
+                    </td>
+                </tr>
+                <tr id="details-${u.uid}" style="display:none"><td colspan="4">
+                    <div class="details-content">UID: ${u.uid}<br>Створено: ${new Date(u.createdAt?._seconds*1000).toLocaleString()}</div>
+                </td></tr>
+            `).join('');
+            } catch (e) { alert(e.message); }
+        }
+
+        window.toggleDetails = (uid) => {
+            const el = document.getElementById(`details-${uid}`);
+            el.style.display = el.style.display === 'none' ? 'table-row' : 'none';
+        };
+
+        window.approveUser = async (uid) => {
+            await apiRequest(`/users/role/${uid}`, 'PATCH', { role: 'teacher' });
+            loadUsers();
+        };
+
+        window.updateUserRole = async (uid, newRole) => { // For teacher/admin dropdown
+            await apiRequest(`/users/role/${uid}`, 'PATCH', { role: newRole });
+            loadUsers();
+        };
+
+        window.deleteUser = async (uid) => {
+            if (confirm('Видалити користувача назавжди?')) {
+                await apiRequest(`/users/${uid}`, 'DELETE');
+                loadUsers();
+            }
+        };
+
+        window.loadSoftware = async () => {
+            const sw = await apiRequest('/software');
+            const list = document.getElementById('software-list');
+            list.innerHTML = sw.map(s => `
+                <tr>
+                    <td>${s.id}</td>
+                    <td>${s.name}</td>
+                    <td>${s.version}</td>
+                    <td>
+                        <button onclick="editSoftware('${s.id}', '${s.name}', '${s.version}')" class="mb-edit-btn" title="Редагувати">✏️</button>
+                        <button onclick="deleteSw('${s.id}')" class="mb-delete-btn" title="Видалити">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        };
+
+        window.removeSwFromAud = async (auditoryId, softwareId) => {
+            if (!confirm('Прибрати це ПЗ з аудиторії?')) return;
+            const auditories = await apiRequest('/auditory');
+            const auditory = auditories.find(a => a.id === auditoryId);
+            if (!auditory) return;
+            const newSoftwareIds = (auditory.softwareIds || []).filter(id => id !== softwareId);
+            await apiRequest(`/auditory/${auditoryId}`, 'PATCH', { softwareIds: newSoftwareIds });
+            loadAuditories();
+        };
+
+        window.openAddSwToAudModal = async (auditoryId) => {
+            const software = await apiRequest('/software');
+            const auditories = await apiRequest('/auditory');
+            const auditory = auditories.find(a => a.id === auditoryId);
+            const currentSwIds = auditory.softwareIds || [];
+            
+            const available = software.filter(s => !currentSwIds.includes(s.id));
+            const listEl = document.getElementById('add-sw-list');
+            
+            if (available.length === 0) {
+                listEl.innerHTML = '<p style="text-align:center; padding:20px;">Все доступне ПЗ вже додано</p>';
+            } else {
+                listEl.innerHTML = available.map(s => `
+                    <label style="display:flex; align-items:center; gap:12px; padding:10px; border-bottom:1px solid var(--border); cursor:pointer;">
+                        <input type="checkbox" value="${s.id}" class="sw-checkbox" style="width:18px; height:18px;">
+                        <span style="font-weight:500;">${s.name} <small style="color:var(--text-muted)">v${s.version}</small></span>
+                    </label>
+                `).join('');
+            }
+            
+            document.getElementById('add-sw-aud-id').value = auditoryId;
+            document.getElementById('add-sw-overlay').style.display = 'flex';
+        };
+
+        window.saveAddSwToAud = async () => {
+            const auditoryId = document.getElementById('add-sw-aud-id').value;
+            const selectedIds = Array.from(document.querySelectorAll('.sw-checkbox:checked')).map(cb => cb.value);
+            if (selectedIds.length === 0) return closeAddSwModal();
+
+            const auditories = await apiRequest('/auditory');
+            const auditory = auditories.find(a => a.id === auditoryId);
+            const newSoftwareIds = [...(auditory.softwareIds || []), ...selectedIds];
+            await apiRequest(`/auditory/${auditoryId}`, 'PATCH', { softwareIds: newSoftwareIds });
+            closeAddSwModal();
+            loadAuditories();
+        };
+
+        window.closeAddSwModal = () => {
+            document.getElementById('add-sw-overlay').style.display = 'none';
+        };
+
+        window.loadAuditories = async () => {
+            const auditories = await apiRequest('/auditory');
+            const software = await apiRequest('/software');
+            window._allSoftware = software; // Зберігаємо для використання в select
+            const list = document.getElementById('auditories-list');
+            list.innerHTML = auditories.map(a => `
+                <tr>
+                    <td><strong>${a.roomNumber}</strong><br><small>${a.name || ''}</small></td>
+                    <td>
+                        <div class="sw-manage-tags" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;">
+                            ${(a.softwareIds || []).map(sid => {
+                                const s = software.find(sw => sw.id === sid);
+                                return s ? `<span class="badge badge-teacher">${s.name} <b onclick="removeSwFromAud('${a.id}', '${sid}')" style="cursor:pointer;margin-left:5px">×</b></span>` : '';
+                            }).join('')}
+                        </div>
+                        <button class="nav-btn secondary-btn" style="padding:4px 8px; font-size:12px" onclick="openAddSwToAudModal('${a.id}')">+ Додати ПЗ</button>
+                    </td>
+                    <td>
+                        <button onclick="editAuditory('${a.id}', '${a.roomNumber}', '${a.name || ''}')" class="mb-edit-btn" title="Редагувати">✏️</button>
+                        <button onclick="deleteAuditory('${a.id}')" class="mb-delete-btn" title="Видалити">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        };
+
+        window.updateAuditorySoftware = async (auditoryId, select) => {
+            const softwareIds = Array.from(select.selectedOptions).map(opt => opt.value);
+            await apiRequest(`/auditory/${auditoryId}`, 'PATCH', { softwareIds: softwareIds });
+        };
+
+        window.loadAllRecords = async () => {
+            const records = await apiRequest('/records');
+            const sorted = records.sort((a, b) => b.data.localeCompare(a.data) || a.number - b.number);
+            const list = document.getElementById('records-list');
+            list.innerHTML = sorted.map(r => `
+                <tr>
+                    <td>${r.data}</td>
+                    <td>${r.auditoryId}</td>
+                    <td>${r.number} пара</td>
+                    <td>${r.userName}</td>
+                    <td><button onclick="deleteRecord('${r.id}')" class="mb-delete-btn">🗑️</button></td>
+                </tr>
+            `).join('');
+        };
+
+        window.deleteRecord = async (id) => {
+            if (confirm('Видалити цей запис?')) {
+                await apiRequest(`/records/${id}`, 'DELETE');
+                loadAllRecords();
+            }
+        };
+
+        window.addSoftware = () => {
+            document.getElementById('sw-modal-title').textContent = 'Додати ПЗ';
+            document.getElementById('edit-sw-id').value = 'sw_' + Date.now();
+            document.getElementById('edit-sw-name').value = '';
+            document.getElementById('edit-sw-version').value = '';
+            document.getElementById('sw-edit-overlay').style.display = 'flex';
+        };
+
+        window.editSoftware = (id, currentName, currentVersion) => {
+            document.getElementById('sw-modal-title').textContent = 'Редагувати ПЗ';
+            document.getElementById('edit-sw-id').value = id;
+            document.getElementById('edit-sw-name').value = currentName;
+            document.getElementById('edit-sw-version').value = currentVersion;
+            document.getElementById('sw-edit-overlay').style.display = 'flex';
+        };
+
+        window.deleteSw = async (id) => {
+            if (confirm('Видалити це ПЗ? Це також прибере його з усіх аудиторій.')) {
+                await apiRequest(`/software/${id}`, 'DELETE');
+                loadSoftware();
+            }
+        };
+
+        window.addAuditory = () => {
+            document.getElementById('aud-modal-title').textContent = 'Додати Аудиторію';
+            document.getElementById('edit-aud-id').value = 'new_aud_' + Date.now(); // Тимчасовий ID
+            document.getElementById('edit-aud-roomNumber').value = '';
+            document.getElementById('edit-aud-name').value = '';
+            document.getElementById('aud-edit-overlay').style.display = 'flex';
+        };
+
+        window.editAuditory = (id, roomNumber, name) => {
+            document.getElementById('aud-modal-title').textContent = 'Редагувати Аудиторію';
+            document.getElementById('edit-aud-id').value = id;
+            document.getElementById('edit-aud-roomNumber').value = roomNumber;
+            document.getElementById('edit-aud-name').value = name;
+            document.getElementById('aud-edit-overlay').style.display = 'flex';
+        };
+
+        window.deleteAuditory = async (id) => {
+            if (confirm('Видалити цю аудиторію?')) {
+                await apiRequest(`/auditory/${id}`, 'DELETE');
+                loadAuditories();
+            }
+        };
+
+        window.closeAudModal = () => {
+            document.getElementById('aud-edit-overlay').style.display = 'none';
+        };
+
+        window.saveAudEdit = async () => {
+            const id = document.getElementById('edit-aud-id').value;
+            const roomNumber = document.getElementById('edit-aud-roomNumber').value.trim();
+            const name = document.getElementById('edit-aud-name').value.trim();
+
+            if (!roomNumber) {
+                alert('Будь ласка, введіть номер аудиторії.');
+                return;
+            }
+
+            if (id.startsWith('new_aud_')) {
+                // Додаємо нову аудиторію
+                await apiRequest('/auditory', 'POST', { roomNumber, name });
+            } else {
+                // Редагуємо існуючу
+                await apiRequest(`/auditory/${id}`, 'PATCH', { roomNumber, name });
+            }
+            closeAudModal();
+            loadAuditories();
+        };
+
+        window.closeSwModal = () => {
+            document.getElementById('sw-edit-overlay').style.display = 'none';
+        };
+
+        window.saveSwEdit = async () => {
+            const id = document.getElementById('edit-sw-id').value;
+            const name = document.getElementById('edit-sw-name').value.trim();
+            const version = document.getElementById('edit-sw-version').value.trim();
+            
+            if (!name || !version) {
+                alert('Будь ласка, заповніть усі поля');
+                return;
+            }
+
+            await apiRequest('/software', 'POST', { id, name, version });
+            closeSwModal();
+            loadSoftware();
+        };
+
+        // ТЕМА ТА ПРОФІЛЬ (ЯК НА ZERO)
+        const THEME_KEY = 'kefk-theme';
+        function applyTheme(dark) {
+            document.body.classList.toggle('dark-theme', dark);
+            document.getElementById('themeIconSun').style.display = dark ? 'none' : '';
+            document.getElementById('themeIconMoon').style.display = dark ? '' : 'none';
+            localStorage.setItem(THEME_KEY, dark ? 'dark' : 'light');
+        }
+        applyTheme(localStorage.getItem(THEME_KEY) === 'dark');
+        document.getElementById('themeToggle').onclick = () => applyTheme(!document.body.classList.contains('dark-theme'));
+
+        function updateLoginBtn() {
+            const session = JSON.parse(localStorage.getItem('clSession'));
+            const btn = document.getElementById('openLogin');
+            const wrap = document.getElementById('authWrap');
+            
+            if (session) {
+                const displayName = session.name || "Адмін";
+                btn.className = 'home-avatar-btn';
+                btn.innerHTML = `
+                    <span class="home-avatar-letter">${displayName.charAt(0).toUpperCase()}</span>
+                    <span class="home-avatar-name">${displayName}</span>
+                    <svg class="home-avatar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+                
+                const drop = document.createElement('div');
+                drop.id = 'userDropdown'; drop.className = 'user-dropdown';
+                drop.innerHTML = `
+                    <div class="user-dropdown-info">
+                        <div class="user-dropdown-name">${displayName}</div>
+                        <div class="user-dropdown-login">@${session.login}</div>
+                    </div>
+                    <button class="user-dropdown-item danger" id="dropLogout">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        Вийти
+                    </button>`;
+                wrap.appendChild(drop);
+                btn.onclick = e => { e.stopPropagation(); drop.classList.toggle('open'); };
+                drop.querySelector('#dropLogout').onclick = () => { localStorage.removeItem('clSession'); location.reload(); };
+                document.onclick = () => drop.classList.remove('open');
+            }
+        }
+
+        async function checkAdminAccess() {
+            try {
+                const profile = await apiRequest('/me');
+                if (profile.role !== 'admin') {
+                    alert('Доступ заборонено: потрібні права адміністратора');
+                    window.location.href = 'zero.html';
+                } else {
+                    updateLoginBtn();
+                    loadUsers(); // Початкове завантаження
+                }
+            } catch (e) { window.location.href = 'auth.html'; }
+        }
+
+        // Ініціалізація
+        auth.onAuthStateChanged(user => { if(user) checkAdminAccess(); else window.location.href = 'auth.html'; });
+    </script>
+</body>
+</html>
