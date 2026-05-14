@@ -97,14 +97,20 @@ const apiDocs = `
 
     <div class="endpoint">
         <span class="method post">POST</span> <code>/records</code>
-        <p class="role">Доступ: admin, teacher</p>
-        <p>Створює запис. Тіло запиту: <code>{ "id": "string", "data": "string", "number": "string" }</code></p>
+        <p class="role">Доступ: admin, teacher (тільки за себе)</p>
+        <p>Створює запис. Тіло запиту: <code>{ "id": "string", "auditoryId": "string", "data": "string", "number": "string" }</code>. Власник запису встановлюється автоматично.</p>
     </div>
 
     <div class="endpoint">
-        <span class="method delete">DELETE</span> <code>/software/:id</code> | <code>/auditory/:id</code> | <code>/records/:id</code>
-        <p class="role">Доступ: admin (для ПЗ), admin/teacher (для іншого)</p>
-        <p>Видаляє відповідний ресурс за його ідентифікатором.</p>
+        <span class="method delete">DELETE</span> <code>/software/:id</code> | <code>/auditory/:id</code>
+        <p class="role">Доступ: admin</p>
+        <p>Видаляє ПЗ або аудиторію за ідентифікатором.</p>
+    </div>
+
+    <div class="endpoint">
+        <span class="method delete">DELETE</span> <code>/records/:id</code>
+        <p class="role">Доступ: admin, teacher (тільки власні)</p>
+        <p>Видаляє запис. Викладачі можуть видаляти лише ті записи, які вони створили.</p>
     </div>
 
     <footer style="margin-top: 50px; font-size: 0.8em; color: #bdc3c7;">
@@ -235,9 +241,19 @@ app.post("/auditory", checkRole(['admin', 'teacher']), async (req, res) => {
 // --- 5. RECORDS: (data, number, id) - Адмін + Викладач ---
 app.post("/records", checkRole(['admin', 'teacher']), async (req, res) => {
   try {
-    const { data, number, id } = req.body;
+    const { data, number, id, auditoryId } = req.body;
     if (!id) return res.status(400).json({ error: "Field 'id' is required!" });
-    await db.collection("records").doc(id).set({ data, number, id });
+
+    const recordData = {
+      id,
+      data,
+      number,
+      auditoryId,
+      userId: req.user.uid, // Зберігаємо хто саме записався
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    await db.collection("records").doc(id).set(recordData);
     console.log(chalk.green(`[DB] Запис створено: ID ${id}`));
     res.status(201).json({ status: "created" });
   } catch (error) {
@@ -252,16 +268,34 @@ app.delete("/software/:id", checkRole(['admin']), async (req, res) => {
   res.json({ status: "deleted" });
 });
 
-app.delete("/auditory/:id", checkRole(['admin', 'teacher']), async (req, res) => {
+app.delete("/auditory/:id", checkRole(['admin']), async (req, res) => {
   await db.collection("auditory").doc(req.params.id).delete();
   console.log(chalk.red(`[DB] Видалено аудиторію: ${req.params.id}`));
   res.json({ status: "deleted" });
 });
 
 app.delete("/records/:id", checkRole(['admin', 'teacher']), async (req, res) => {
-  await db.collection("records").doc(req.params.id).delete();
-  console.log(chalk.red(`[DB] Видалено запис: ${req.params.id}`));
-  res.json({ status: "deleted" });
+  try {
+    const docRef = db.collection("records").doc(req.params.id);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ error: "Запис не знайдено" });
+    }
+
+    const record = doc.data();
+
+    // Перевірка прав: адмін або власник запису
+    if (req.user.role !== 'admin' && record.userId !== req.user.uid) {
+      return res.status(403).json({ error: "Ви можете видаляти лише власні записи" });
+    }
+
+    await docRef.delete();
+    console.log(chalk.red(`[DB] Видалено запис: ${req.params.id}`));
+    res.json({ status: "deleted" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 app.get("/login", (req, res) => {
