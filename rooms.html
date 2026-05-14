@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Список аудиторій — KEFK</title>
+  <link rel="stylesheet" href="one.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="rooms-page">
+
+<canvas id="rooms-canvas"></canvas>
+
+<div class="rooms-wrap">
+
+  <!-- HEADER -->
+  <header class="home-header">
+    <div class="home-nav">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <a href="zero.html" class="rooms-back-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          На головну
+        </a>
+      </div>
+
+      <div class="home-header-right">
+        <a href="note.html" class="rooms-book-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span class="rooms-book-label">Записатися</span>
+        </a>
+
+        <button class="home-theme-btn home-theme-btn--desktop" id="themeToggle" title="Змінити тему">
+          <svg id="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg id="themeIconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+
+        <div style="position:relative" id="authWrap">
+          <a href="#" class="nav-btn secondary-btn" id="openLogin">Вхід</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="rooms-main">
+    <section class="rooms-hero">
+      <h1>Список аудиторій</h1>
+      <p>Головний корпус, 4 поверх. Інформація про спеціалізацію та відповідальних осіб.</p>
+    </section>
+
+    <section class="rooms-grid-section">
+
+      <div class="room-card-new">
+        <div class="room-num">68</div>
+        <div class="room-info-block">
+          <h3>Лаб. інформатики</h3>
+          <p>Інформаційні технології</p>
+        </div>
+        <div class="room-person">
+          <span class="room-person-label">Відповідальна особа</span>
+          <span class="room-person-name">Петренко Юлія Олександрівна</span>
+        </div>
+        <a href="#" class="room-detail-btn">Детальніше</a>
+      </div>
+
+      <div class="room-card-new">
+        <div class="room-num">80</div>
+        <div class="room-info-block">
+          <h3>Електроенергетика</h3>
+          <p>Інформаційні системи</p>
+        </div>
+        <div class="room-person">
+          <span class="room-person-label">Відповідальна особа</span>
+          <span class="room-person-name">Павленко Тамара Іванівна</span>
+        </div>
+        <a href="#" class="room-detail-btn">Детальніше</a>
+      </div>
+
+      <div class="room-card-new">
+        <div class="room-num">81</div>
+        <div class="room-info-block">
+          <h3>Лабораторія ІС</h3>
+          <p>Системні технології</p>
+        </div>
+        <div class="room-person">
+          <span class="room-person-label">Відповідальна особа</span>
+          <span class="room-person-name">Жуков Сергій Вадимович</span>
+        </div>
+        <a href="#" class="room-detail-btn">Детальніше</a>
+      </div>
+
+      <div class="room-card-new">
+        <div class="room-num">82</div>
+        <div class="room-info-block">
+          <h3>Лаб. програмування</h3>
+          <p>Розробка ПЗ</p>
+        </div>
+        <div class="room-person">
+          <span class="room-person-label">Відповідальна особа</span>
+          <span class="room-person-name">Аушев Максим Олександрович</span>
+        </div>
+        <a href="#" class="room-detail-btn">Детальніше</a>
+      </div>
+
+      <div class="room-card-new">
+        <div class="room-num">83</div>
+        <div class="room-info-block">
+          <h3>Мікропроцесорні системи</h3>
+          <p>Програмування заліза</p>
+        </div>
+        <div class="room-person">
+          <span class="room-person-label">Відповідальна особа</span>
+          <span class="room-person-name">Аушев Максим Олександрович</span>
+        </div>
+        <a href="#" class="room-detail-btn">Детальніше</a>
+      </div>
+
+      <div class="room-card-new">
+        <div class="room-num">84</div>
+        <div class="room-info-block">
+          <h3>Архітектура ПК</h3>
+          <p>Периферійні пристрої</p>
+        </div>
+        <div class="room-person">
+          <span class="room-person-label">Відповідальна особа</span>
+          <span class="room-person-name">Робак Артем Ігорович</span>
+        </div>
+        <a href="#" class="room-detail-btn">Детальніше</a>
+      </div>
+
+    </section>
+  </main>
+
+</div>
+
+<!-- Модалка входу -->
+<div id="loginOverlay" class="login-overlay" onclick="if(event.target===this)closeLogin()">
+  <div class="login-modal">
+    <button class="login-close" onclick="closeLogin()">&#x2715;</button>
+    <h2>Вхід до системи</h2>
+    <div class="login-field">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <input type="text" id="loginInput" placeholder="Логін / Пошта" autocomplete="off" />
+    </div>
+    <div class="login-field">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <input type="password" id="passInput" placeholder="Пароль" />
+      <button class="eye-btn" onclick="togglePass()" tabindex="-1">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <div class="login-options">
+      <label class="login-remember"><input type="checkbox" /> Запам'ятати мене</label>
+      <a href="#" class="login-forgot">Забули пароль?</a>
+    </div>
+    <button class="login-submit-btn" onclick="submitLogin()">Увійти</button>
+    <p id="loginError" class="login-error-msg" style="display:none">Невірний логін або пароль</p>
+    <p class="login-hint">Для отримання облікових даних зверніться до Лаборанта</p>
+  </div>
+</div>
+
+<!-- Модалка "Мої записи" -->
+<div id="myBookingsOverlay" class="my-bookings-overlay" onclick="if(event.target===this)closeMyBookings()">
+  <div class="my-bookings-modal">
+    <div class="my-bookings-header">
+      <div>
+        <h2 class="my-bookings-title">Мої записи</h2>
+        <p class="my-bookings-count" id="myBookingsCount"></p>
+      </div>
+      <button class="my-bookings-close" onclick="closeMyBookings()">&#x2715;</button>
+    </div>
+    <div class="my-bookings-list" id="myBookingsList"></div>
+  </div>
+</div>
+
+<script>
+/* ── Theme ── */
+const THEME_KEY = 'kefk-theme';
+function applyTheme(dark) {
+  document.body.classList.toggle('dark-theme', dark);
+  document.getElementById('themeIconSun').style.display  = dark ? 'none' : '';
+  document.getElementById('themeIconMoon').style.display = dark ? ''     : 'none';
+  localStorage.setItem(THEME_KEY, dark ? 'dark' : 'light');
+}
+const saved = localStorage.getItem(THEME_KEY);
+applyTheme(saved === 'dark');
+document.getElementById('themeToggle').addEventListener('click', () => {
+  applyTheme(!document.body.classList.contains('dark-theme'));
+});
+
+/* ── Auth (same as zero.html) ── */
+const USERS = [
+  { login: 'admin',    password: 'admin123', role: 'admin',   name: 'Адміністратор' },
+  { login: 'aushev',   password: '123',      role: 'teacher', name: 'Аушев М.О' },
+  { login: 'petrenko', password: '123',      role: 'teacher', name: 'Петренко Ю.О' },
+];
+
+function getSession() {
+  try { return JSON.parse(localStorage.getItem('clSession')) || null; } catch { return null; }
+}
+function setSession(u) { localStorage.setItem('clSession', JSON.stringify(u)); }
+function clearSession() { localStorage.removeItem('clSession'); }
+
+function openLogin() {
+  document.getElementById('loginOverlay').style.display = 'flex';
+  document.getElementById('loginInput').focus();
+}
+function closeLogin() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('loginError').style.display = 'none';
+}
+function togglePass() {
+  const inp = document.getElementById('passInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+function submitLogin() {
+  const login = document.getElementById('loginInput').value.trim();
+  const pass  = document.getElementById('passInput').value;
+  const user  = USERS.find(u => u.login === login && u.password === pass);
+  if (user) {
+    setSession({ login: user.login, role: user.role, name: user.name });
+    closeLogin();
+    updateLoginBtn();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+document.getElementById('passInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitLogin();
+});
+
+function updateLoginBtn() {
+  const session = getSession();
+  const btn  = document.getElementById('openLogin');
+  const wrap = document.getElementById('authWrap');
+  const old  = document.getElementById('userDropdown');
+  if (old) old.remove();
+
+  if (session) {
+    btn.className = 'home-avatar-btn';
+    btn.innerHTML = `
+      <span class="home-avatar-letter">${session.name.charAt(0).toUpperCase()}</span>
+      <span class="home-avatar-name">${session.name}</span>
+      <svg class="home-avatar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>`;
+    btn.title = session.name;
+
+    const drop = document.createElement('div');
+    drop.id = 'userDropdown';
+    drop.className = 'user-dropdown';
+    drop.innerHTML = `
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-name">${session.name}</div>
+        <div class="user-dropdown-login">@${session.login}</div>
+      </div>
+      <button class="user-dropdown-item home-theme-menu-item" id="dropTheme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        Змінити тему
+      </button>
+      <button class="user-dropdown-item" id="dropMyBookings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Мої записи
+      </button>
+      <button class="user-dropdown-item danger" id="dropLogout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Вийти
+      </button>`;
+    wrap.appendChild(drop);
+
+    btn.onclick = e => { e.preventDefault(); e.stopPropagation(); drop.classList.toggle('open'); };
+    drop.querySelector('#dropTheme').onclick = () => {
+      drop.classList.remove('open');
+      applyTheme(!document.body.classList.contains('dark-theme'));
+    };
+    drop.querySelector('#dropMyBookings').onclick = () => { drop.classList.remove('open'); openMyBookings(); };
+    drop.querySelector('#dropLogout').onclick = () => { clearSession(); location.reload(); };
+
+    setTimeout(() => {
+      document.addEventListener('click', function handler(e) {
+        if (!wrap.contains(e.target)) { drop.classList.remove('open'); document.removeEventListener('click', handler); }
+      });
+    }, 0);
+  } else {
+    btn.className = 'nav-btn secondary-btn';
+    btn.textContent = 'Вхід';
+    btn.title = '';
+    btn.style.textDecoration = 'none';
+    btn.onclick = e => { e.preventDefault(); openLogin(); };
+  }
+}
+
+updateLoginBtn();
+
+const DAY_NAMES_UA = ["Неділя","Понеділок","Вівторок","Середа","Четвер","П'ятниця","Субота"];
+const MONTH_UA_GEN = ["січня","лютого","березня","квітня","травня","червня","липня","серпня","вересня","жовтня","листопада","грудня"];
+
+async function openMyBookings() {
+  const session = getSession();
+  if (!session) { openLogin(); return; }
+  const drop = document.getElementById('userDropdown');
+  if (drop) drop.classList.remove('open');
+  let allBookings = [];
+  try { const r = await fetch('/api/bookings'); allBookings = await r.json(); } catch(e) {}
+  const mine = allBookings
+    .filter(b => b.teacherLogin === session.login)
+    .sort((a, b) => a.date.localeCompare(b.date) || a.pairIndex - b.pairIndex);
+  const n = mine.length;
+  document.getElementById('myBookingsCount').textContent =
+    n + ' ' + (n === 1 ? 'запис' : n >= 2 && n <= 4 ? 'записи' : 'записів');
+  const listEl = document.getElementById('myBookingsList');
+  listEl.innerHTML = '';
+  if (!mine.length) {
+    listEl.innerHTML = '<p class="mb-empty">У вас ще немає бронювань</p>';
+  } else {
+    mine.forEach(b => {
+      const d = new Date(b.date + 'T00:00:00');
+      const dateLabel = DAY_NAMES_UA[d.getDay()] + ', ' + d.getDate() + ' ' + MONTH_UA_GEN[d.getMonth()] + ' ' + d.getFullYear() + ' р.';
+      const item = document.createElement('div');
+      item.className = 'mb-item';
+      item.innerHTML =
+        `<input type="checkbox" class="mb-checkbox" />` +
+        `<div class="mb-info"><div class="mb-date">${dateLabel}</div><div class="mb-meta">` +
+        `<span class="mb-pair"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${b.pairName}</span>` +
+        `<span class="mb-room"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Ауд. ${b.room}</span>` +
+        `</div></div>` +
+        `<button class="mb-delete-btn" title="Видалити"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>`;
+      item.querySelector('.mb-delete-btn').addEventListener('click', () => deleteBooking(b.id, item));
+      listEl.appendChild(item);
+    });
+  }
+  document.getElementById('myBookingsOverlay').style.display = 'flex';
+}
+
+function closeMyBookings() {
+  document.getElementById('myBookingsOverlay').style.display = 'none';
+}
+
+async function deleteBooking(bookingId, itemEl) {
+  let allBookings = [];
+  try { const r = await fetch('/api/bookings'); allBookings = await r.json(); } catch(e) { return; }
+  const updated = allBookings.filter(b => String(b.id) !== String(bookingId));
+  try {
+    await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated, null, 2) });
+  } catch(e) { alert('Помилка видалення'); return; }
+  itemEl.style.transition = 'opacity 0.2s, transform 0.2s';
+  itemEl.style.opacity = '0';
+  itemEl.style.transform = 'translateX(16px)';
+  setTimeout(() => {
+    itemEl.remove();
+    const remaining = document.querySelectorAll('#myBookingsList .mb-item').length;
+    document.getElementById('myBookingsCount').textContent =
+      remaining + ' ' + (remaining === 1 ? 'запис' : remaining >= 2 && remaining <= 4 ? 'записи' : 'записів');
+    if (!remaining) document.getElementById('myBookingsList').innerHTML = '<p class="mb-empty">У вас ще немає бронювань</p>';
+  }, 200);
+}
+
+/* ── Particles ── */
+(function () {
+  const canvas = document.getElementById('rooms-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  const COUNT = 50;
+  const pts = Array.from({ length: COUNT }, () => ({
+    x: Math.random(), y: Math.random(),
+    r: rnd(1.5, 3.5),
+    vx: rnd(-0.05, 0.05), vy: rnd(-0.07, -0.02),
+    a: rnd(0.3, 0.75), va: rnd(-0.003, 0.003),
+  }));
+  const MAX_D = 0.17;
+
+  function isDark() { return document.body.classList.contains('dark-theme'); }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const dark = isDark();
+
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    if (dark) {
+      bg.addColorStop(0, '#0d0d1a'); bg.addColorStop(0.5, '#111128'); bg.addColorStop(1, '#0a0a1f');
+    } else {
+      bg.addColorStop(0, '#f0f2ff'); bg.addColorStop(0.5, '#e8eaff'); bg.addColorStop(1, '#eef0fb');
+    }
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+    const b1 = ctx.createRadialGradient(W*0.1, H*0.15, 0, W*0.1, H*0.15, W*0.38);
+    b1.addColorStop(0, dark ? 'rgba(99,102,241,0.18)' : 'rgba(99,102,241,0.11)');
+    b1.addColorStop(1, 'rgba(99,102,241,0)');
+    ctx.fillStyle = b1; ctx.fillRect(0, 0, W, H);
+
+    const b2 = ctx.createRadialGradient(W*0.88, H*0.82, 0, W*0.88, H*0.82, W*0.32);
+    b2.addColorStop(0, dark ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.09)');
+    b2.addColorStop(1, 'rgba(139,92,246,0)');
+    ctx.fillStyle = b2; ctx.fillRect(0, 0, W, H);
+
+    pts.forEach(p => {
+      p.x += p.vx * 0.001; p.y += p.vy * 0.001;
+      p.a += p.va;
+      if (p.a < 0.15) { p.a = 0.15; p.va *= -1; }
+      if (p.a > 0.8)  { p.a = 0.8;  p.va *= -1; }
+      if (p.x < -0.05) p.x = 1.05;
+      if (p.x > 1.05)  p.x = -0.05;
+      if (p.y < -0.05) p.y = 1.05;
+      if (p.y > 1.05)  p.y = -0.05;
+    });
+
+    const lc = dark ? '139,92,246' : '99,102,241';
+    for (let i = 0; i < COUNT; i++) {
+      for (let j = i+1; j < COUNT; j++) {
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if (d < MAX_D) {
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x*W, pts[i].y*H);
+          ctx.lineTo(pts[j].x*W, pts[j].y*H);
+          ctx.strokeStyle = `rgba(${lc},${(1-d/MAX_D)*0.22})`;
+          ctx.lineWidth = 1; ctx.stroke();
+        }
+      }
+    }
+    const dc = dark ? '167,139,250' : '99,102,241';
+    pts.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x*W, p.y*H, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${dc},${p.a})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+
+</body>
+</html>

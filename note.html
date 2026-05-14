@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Бронювання аудиторій</title>
+<link rel="stylesheet" href="one.css" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body class="note-page">
+
+<!-- ═══ ШАПКА ═══ -->
+<header class="note-header">
+  <div class="note-header-left">
+    <a href="zero.html" class="rooms-back-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      <span class="back-btn-text">На головну</span>
+    </a>
+  </div>
+
+  <div class="month-nav">
+    <button class="month-arrow" id="prevMonth">&#8249;</button>
+    <button class="month-title-btn" id="monthTitle" onclick="openMonthPicker()"></button>
+    <button class="month-arrow" id="nextMonth">&#8250;</button>
+  </div>
+
+  <div class="note-header-right">
+    <button class="home-theme-btn" id="themeToggle" title="Змінити тему">
+      <svg id="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <svg id="themeIconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+    <div style="position:relative" id="authWrap">
+      <button class="nav-btn secondary-btn" id="openLogin">Вхід</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ ТАБЛИЦЯ (центр, скрол) ═══ -->
+<div class="wrapper" id="wrapper">
+  <!-- Сюди динамічно додаються .month-block і .month-sep -->
+</div>
+
+<!-- ═══ НИЖНЯ ПАНЕЛЬ ═══ -->
+<footer class="note-footer">
+  <button class="confirm-booking-btn" id="confirmBtn" disabled>
+    Підтвердити бронювання
+  </button>
+</footer>
+
+<!-- ═══ ПОПАП ПЗ ═══ -->
+<div id="sw-popup" class="sw-popup-overlay" onclick="if(event.target===this)this.style.display='none'">
+  <div class="sw-popup-box">
+    <div class="sw-popup-header">
+      <span id="sw-popup-title"></span>
+      <button onclick="document.getElementById('sw-popup').style.display='none'">&times;</button>
+    </div>
+    <div class="sw-popup-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="sw-search-input" placeholder="Пошук програми..." autocomplete="off" oninput="filterSoftware(this.value)" />
+    </div>
+    <div id="sw-popup-body" class="sw-popup-body"></div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА ВХОДУ ═══ -->
+<div id="loginOverlay" class="login-overlay" onclick="if(event.target===this)closeLogin()">
+  <div class="login-modal">
+    <button class="login-close" onclick="closeLogin()">&#x2715;</button>
+    <h2>Вхід до системи</h2>
+    <div class="login-field">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <input type="text" id="loginInput" placeholder="Логін / Пошта" autocomplete="off" />
+    </div>
+    <div class="login-field">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <input type="password" id="passInput" placeholder="Пароль" />
+      <button class="eye-btn" id="eyeBtn" onclick="togglePass()" tabindex="-1">
+        <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <div class="login-options">
+      <label class="login-remember"><input type="checkbox" id="rememberMe" /> Запам'ятати мене</label>
+      <a href="#" class="login-forgot">Забули пароль?</a>
+    </div>
+    <button class="login-submit-btn" onclick="submitLogin()">Увійти</button>
+    <p id="loginError" class="login-error-msg" style="display:none">Невірний логін або пароль</p>
+    <p class="login-hint">Для отримання облікових даних зверніться до Лаборанта</p>
+  </div>
+</div>
+
+<!-- ═══ ДЕСКТОП CALENDAR POPUP ═══ -->
+<div id="deskCalPopup" class="desk-cal-popup">
+  <div class="desk-cal-header">
+    <button class="desk-cal-nav" id="deskCalPrev">&#8249;</button>
+    <span id="deskCalTitle"></span>
+    <button class="desk-cal-nav" id="deskCalNext">&#8250;</button>
+  </div>
+  <button class="desk-cal-today-btn" id="deskCalTodayBtn">Сьогодні</button>
+  <div class="desk-cal-weekdays">
+    <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Нд</span>
+  </div>
+  <div class="desk-cal-grid" id="deskCalGrid"></div>
+</div>
+
+<!-- ═══ МОДАЛКА ВИБОРУ ДНЯ (мобільна) ═══ -->
+<div id="dayPickerOverlay" class="day-picker-overlay" onclick="if(event.target===this)closeDayPicker()">
+  <div class="day-picker-modal">
+    <div class="day-picker-header">
+      <button class="dp-nav-btn" id="dpPrev" onclick="dpNavigate(-1)">&#8249;</button>
+      <span id="dayPickerTitle"></span>
+      <button class="dp-nav-btn" id="dpNext" onclick="dpNavigate(1)">&#8250;</button>
+      <button class="day-picker-close" onclick="closeDayPicker()">&#x2715;</button>
+    </div>
+    <button class="dp-today-btn" id="dpTodayBtn" onclick="dpGoToday()">Сьогодні</button>
+    <div id="dayPickerScroll" class="day-picker-scroll"></div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА ВИБОРУ МІСЯЦЯ ═══ -->
+<div id="monthPickerOverlay" class="month-picker-overlay" onclick="if(event.target===this)closeMonthPicker()">
+  <div class="month-picker-modal">
+    <div class="month-picker-header">
+      <button class="month-picker-arrow" id="mpPrevYear">&#8249;</button>
+      <span class="month-picker-year" id="mpYear"></span>
+      <button class="month-picker-arrow" id="mpNextYear">&#8250;</button>
+    </div>
+    <div class="month-picker-grid" id="mpGrid"></div>
+    <div class="month-picker-footer">
+      <button class="month-picker-cancel" onclick="closeMonthPicker()">Скасувати</button>
+      <button class="month-picker-today" onclick="goToToday()">Сьогодні</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА "МОЇ ЗАПИСИ" ═══ -->
+<div id="myBookingsOverlay" class="my-bookings-overlay" onclick="if(event.target===this)closeMyBookings()">
+  <div class="my-bookings-modal">
+    <div class="my-bookings-header">
+      <div>
+        <h2 class="my-bookings-title">Мої записи</h2>
+        <p class="my-bookings-count" id="myBookingsCount"></p>
+      </div>
+      <button class="my-bookings-close" onclick="closeMyBookings()">&#x2715;</button>
+    </div>
+    <div class="my-bookings-list" id="myBookingsList"></div>
+  </div>
+</div>
+
+<!-- ═══ МОДАЛКА ПІДТВЕРДЖЕННЯ БРОНЮВАННЯ ═══ -->
+<div id="bookingSuccessOverlay" class="booking-success-overlay" onclick="if(event.target===this)closeBookingSuccess()">
+  <div class="booking-success-modal">
+    <div class="booking-success-icon">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 class="booking-success-title">Бронювання підтверджено!</h2>
+    <p class="booking-success-sub">Ви успішно записані на <strong id="bookingSuccessCount"></strong></p>
+    <div id="bookingSuccessList" class="booking-success-list"></div>
+    <button class="booking-success-ok" onclick="closeBookingSuccess()">Зрозуміло</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  КОНСТАНТИ
+// ═══════════════════════════════════════════════════════════
+const ROOMS = ["84","83","82","81","80","68"];
+const SOFTWARE = {};
+fetch('software.json').then(r=>r.json()).then(d=>Object.assign(SOFTWARE,d)).catch(()=>{});
+
+const MONTH_NAMES = ["Січень","Лютий","Березень","Квітень","Травень","Червень",
+                     "Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"];
+const MONTH_NAMES_GEN = ["січня","лютого","березня","квітня","травня","червня",
+                         "липня","серпня","вересня","жовтня","листопада","грудня"];
+const DAY_SHORT = ["Нд","Пн","Вт","Ср","Чт","Пт","Сб"];
+const DAY_NAMES = ["Неділя","Понеділок","Вівторок","Середа","Четвер","П'ятниця","Субота"];
+const PAIR_NAMES = ["I пара","II пара","III пара","IV пара"];
+const PAIR_TIMES = ["08:30 — 09:30","09:40 — 10:40","11:10 — 12:10","12:20 — 13:20"];
+
+const COL_W = 148;
+
+let current = new Date(); 
+current.setDate(1);
+let loadedMonths = [];
+let loadingNext = false;
+
+// ═══════════════════════════════════════════════════════════
+//  УТИЛІТИ
+// ═══════════════════════════════════════════════════════════
+function getDays(year, month) {
+  const count = new Date(year, month+1, 0).getDate();
+  const days = [];
+  for (let i = 1; i <= count; i++) {
+    const d = new Date(year, month, i);
+    const dow = d.getDay();
+    if (dow === 0 || dow === 6) continue;
+    days.push({
+      num: i,
+      label: i + ' ' + DAY_SHORT[dow],
+      dow,
+      dateStr: year + '-' + String(month+1).padStart(2,'0') + '-' + String(i).padStart(2,'0')
+    });
+  }
+  return days;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  АКТИВНІ СЛОТИ
+// ═══════════════════════════════════════════════════════════
+const selectedSlots = new Map();
+
+// ── Кеш бронювань ──
+let cachedBookings = [];
+async function loadBookings() {
+  try {
+    const r = await fetch('/api/bookings');
+    cachedBookings = await r.json();
+  } catch(e) { cachedBookings = []; }
+}
+// Завантажуємо одразу
+loadBookings();
+
+function slotKey(dateStr, room, pairIdx) {
+  return `${dateStr}|${room}|${pairIdx}`;
+}
+
+function toggleSlot(btn, dateStr, room, pairIdx) {
+  const session = getSession();
+  if (!session) { openLogin(); return; }
+
+  const key = slotKey(dateStr, room, pairIdx);
+  if (selectedSlots.has(key)) {
+    selectedSlots.delete(key);
+    btn.classList.remove('active');
+  } else {
+    selectedSlots.set(key, { dateStr, room, pairIdx });
+    btn.classList.add('active');
+  }
+  updateConfirmBtn();
+}
+
+function updateConfirmBtn() {
+  const btn = document.getElementById('confirmBtn');
+  const count = selectedSlots.size;
+  btn.disabled = count === 0;
+  btn.textContent = count > 0 ? `Підтвердити бронювання (${count})` : 'Підтвердити бронювання';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  БУДУЄ DESKTOP ВИГЛЯД
+// ═══════════════════════════════════════════════════════════
+function buildMonthBlock(year, month) {
+  const days = getDays(year, month);
+  if (!days.length) return null;
+
+  const block = document.createElement('div');
+  block.className = 'month-block';
+  block.dataset.year = year;
+  block.dataset.month = month;
+  block.style.gridTemplateColumns = `repeat(${days.length}, ${COL_W}px)`;
+
+  days.forEach(day => {
+    const h = document.createElement('div');
+    h.className = 'header' + (day.dow === 5 ? ' week-end' : '');
+    // Підсвічуємо сьогоднішній день
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    if (day.dateStr === todayStr) h.classList.add('header-today');
+    if (day.dateStr === (window._dpSelectedDate || '') && day.dateStr !== todayStr) h.classList.add('header-selected');
+    h.innerText = day.label;
+    h.style.cursor = 'pointer';
+    h.addEventListener('click', () => openDesktopDayPicker(year, month, h));
+    block.appendChild(h);
+  });
+
+  ROOMS.forEach(room => {
+    days.forEach(day => {
+      const today2 = new Date();
+      const todayStr2 = `${today2.getFullYear()}-${String(today2.getMonth()+1).padStart(2,'0')}-${String(today2.getDate()).padStart(2,'0')}`;
+      const cell = document.createElement('div');
+      cell.className = 'cell' + (day.dow === 5 ? ' week-end' : '');
+      if (day.dateStr === todayStr2) cell.classList.add('cell-today');
+      if (day.dateStr === (window._dpSelectedDate || '') && day.dateStr !== todayStr2) cell.classList.add('cell-selected');
+
+      const lbl = document.createElement('div');
+      lbl.className = 'room-label';
+      const rn = document.createElement('span'); 
+      rn.innerText = room;
+      const sw = document.createElement('button');
+      sw.className = 'sw-btn'; 
+      sw.innerText = 'ПЗ';
+      sw.onclick = e => { e.stopPropagation(); showSoftware(room); };
+      lbl.appendChild(rn); 
+      lbl.appendChild(sw);
+
+      const slots = document.createElement('div');
+      slots.className = 'slots';
+      for (let i = 0; i < 4; i++) {
+        const btn = document.createElement('button');
+        const key = slotKey(day.dateStr, room, i);
+
+        btn.innerText = i + 1;
+        if (selectedSlots.has(key)) btn.classList.add('active');
+        btn.onclick = () => toggleSlot(btn, day.dateStr, room, i);
+        slots.appendChild(btn);
+      }
+
+      cell.appendChild(lbl); 
+      cell.appendChild(slots);
+      block.appendChild(cell);
+    });
+  });
+
+  return block;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  БУДУЄ МОБІЛЬНИЙ ВИГЛЯД
+// ═══════════════════════════════════════════════════════════
+function buildMobileMonth(year, month) {
+  const days = getDays(year, month);
+  if (!days.length) return null;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'mob-month';
+  wrap.dataset.year = year;
+  wrap.dataset.month = month;
+
+  days.forEach(day => {
+    const col = document.createElement('div');
+    col.className = 'mob-col' + (day.dow === 5 ? ' week-end' : '');
+    col.style.width = window.innerWidth + 'px';
+    col.style.flexShrink = '0';
+
+    const head = document.createElement('div');
+    head.className = 'mob-day-head';
+    const d = new Date(day.dateStr + 'T00:00:00');
+    head.innerHTML =
+      `<span class="mob-day-name">${DAY_NAMES[day.dow]}</span>` +
+      `<span class="mob-day-date mob-date-clickable" data-date="${day.dateStr}">${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}</span>`;
+    
+    head.querySelector('.mob-date-clickable').addEventListener('click', () => openDayPicker(year, month));
+    col.appendChild(head);
+
+    ROOMS.forEach(room => {
+      const card = document.createElement('div');
+      card.className = 'mob-room-card';
+
+      const roomRow = document.createElement('div');
+      roomRow.className = 'mob-room-row';
+      roomRow.innerHTML = `<div class="mob-room-name">Ауд. ${room}</div>`;
+      
+      const swBtn = document.createElement('button');
+      swBtn.className = 'sw-btn';
+      swBtn.textContent = 'ПЗ';
+      swBtn.onclick = e => { e.stopPropagation(); showSoftware(room); };
+      roomRow.appendChild(swBtn);
+      card.appendChild(roomRow);
+
+      const grid = document.createElement('div');
+      grid.className = 'mob-pairs-grid';
+
+      for (let i = 0; i < 4; i++) {
+        const btn = document.createElement('button');
+        const key = slotKey(day.dateStr, room, i);
+        btn.className = 'mob-pair-btn';
+        btn.textContent = PAIR_NAMES[i];
+        if (selectedSlots.has(key)) btn.classList.add('active');
+        btn.onclick = () => toggleSlot(btn, day.dateStr, room, i);
+        grid.appendChild(btn);
+      }
+
+      card.appendChild(grid);
+      col.appendChild(card);
+    });
+
+    wrap.appendChild(col);
+  });
+
+  return wrap;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  РОЗДІЛЬНИКИ МІЖ МІСЯЦЯМИ
+// ═══════════════════════════════════════════════════════════
+function buildSeparator(year, month) {
+  const sep = document.createElement('div');
+  sep.className = 'month-sep';
+  const label = document.createElement('div');
+  label.className = 'month-sep-label';
+  label.textContent = `${MONTH_NAMES[month]} ${year}`;
+  sep.appendChild(label);
+  return sep;
+}
+
+function buildMobileSeparator(year, month) {
+  const sep = document.createElement('div');
+  sep.className = 'mob-month-sep';
+  const label = document.createElement('div');
+  label.className = 'mob-month-sep-label';
+  label.textContent = `${MONTH_NAMES[month]} ${year}`;
+  sep.appendChild(label);
+  return sep;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ПІДВАНТАЖЕННЯ НАСТУПНОГО МІСЯЦЯ
+// ═══════════════════════════════════════════════════════════
+function appendNextMonth() {
+  const last = loadedMonths[loadedMonths.length - 1];
+  const nd = new Date(last.year, last.month + 1, 1);
+  const ny = nd.getFullYear();
+  const nm = nd.getMonth();
+  loadedMonths.push({ year: ny, month: nm });
+  
+  const wrapper = document.getElementById('wrapper');
+  const separator = isMobile() ? buildMobileSeparator(ny, nm) : buildSeparator(ny, nm);
+  wrapper.appendChild(separator);
+  
+  const block = isMobile() ? buildMobileMonth(ny, nm) : buildMonthBlock(ny, nm);
+  if (block) wrapper.appendChild(block);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ІНІЦІАЛІЗАЦІЯ
+// ═══════════════════════════════════════════════════════════
+function isMobile() { return window.innerWidth <= 768; }
+
+function initGrid() {
+  const wrapper = document.getElementById('wrapper');
+  wrapper.innerHTML = '';
+  loadedMonths = [];
+  wrapper.classList.remove('mob-wrapper');
+
+  const y = current.getFullYear();
+  const m = current.getMonth();
+  loadedMonths.push({ year: y, month: m });
+
+  const block = isMobile() ? buildMobileMonth(y, m) : buildMonthBlock(y, m);
+  if (block) wrapper.appendChild(block);
+  wrapper.scrollLeft = 0;
+  updateTitle();
+
+  // На мобільному — скролимо на сьогоднішній день
+  if (isMobile()) {
+    const today = new Date();
+    if (today.getFullYear() === y && today.getMonth() === m) {
+      setTimeout(() => {
+        const todayStr = `${y}-${String(m+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+        const cols = wrapper.querySelectorAll('.mob-col');
+        for (const col of cols) {
+          if (col.querySelector(`[data-date="${todayStr}"]`)) {
+            wrapper.scrollTo({ left: col.offsetLeft, behavior: 'instant' });
+            break;
+          }
+        }
+      }, 50);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ЗАГОЛОВОК МІСЯЦЯ
+// ═══════════════════════════════════════════════════════════
+function updateTitle() {
+  const wrapper = document.getElementById('wrapper');
+  const cx = wrapper.scrollLeft + wrapper.clientWidth / 2;
+  let x = 0;
+  for (const el of wrapper.children) {
+    const w = el.offsetWidth;
+    if (el.classList.contains('month-block') || el.classList.contains('mob-month')) {
+      if (cx >= x && cx < x + w) {
+        document.getElementById('monthTitle').textContent = `${MONTH_NAMES[+el.dataset.month]} ${el.dataset.year}`;
+        return;
+      }
+    }
+    x += w;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  НАВІГАЦІЯ
+// ═══════════════════════════════════════════════════════════
+document.getElementById('prevMonth').addEventListener('click', () => {
+  current.setMonth(current.getMonth() - 1); initGrid();
+});
+document.getElementById('nextMonth').addEventListener('click', () => {
+  current.setMonth(current.getMonth() + 1); initGrid();
+});
+
+// ═══════════════════════════════════════════════════════════
+//  СКРОЛ
+// ═══════════════════════════════════════════════════════════
+const wrapper = document.getElementById('wrapper');
+
+wrapper.addEventListener('scroll', () => {
+  updateTitle();
+  const nearEnd = wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 400;
+  if (nearEnd && !loadingNext) {
+    loadingNext = true;
+    appendNextMonth();
+    setTimeout(() => { loadingNext = false; }, 600);
+  }
+});
+
+// Mouse drag
+let isDown = false, startX, scrollLeft;
+wrapper.addEventListener('mousedown', e => {
+  if (e.target.tagName === 'BUTTON') return;
+  isDown = true; wrapper.style.cursor = 'grabbing';
+  startX = e.pageX - wrapper.offsetLeft;
+  scrollLeft = wrapper.scrollLeft;
+});
+wrapper.addEventListener('mouseleave', () => { isDown = false; wrapper.style.cursor = 'default'; });
+wrapper.addEventListener('mouseup',    () => { isDown = false; wrapper.style.cursor = 'default'; });
+wrapper.addEventListener('mousemove', e => {
+  if (!isDown) return;
+  e.preventDefault();
+  wrapper.scrollLeft = scrollLeft - (e.pageX - wrapper.offsetLeft - startX) * 1.5;
+});
+
+// ═══════════════════════════════════════════════════════════
+//  ПЗ ПОПАП
+// ═══════════════════════════════════════════════════════════
+let currentSwList = [];
+
+function showSoftware(room) {
+  currentSwList = SOFTWARE[room] || [];
+  document.getElementById('sw-popup-title').textContent = `ПЗ — Аудиторія ${room}`;
+  document.getElementById('sw-search-input').value = '';
+  renderSoftwareList(currentSwList);
+  document.getElementById('sw-popup').style.display = 'flex';
+  setTimeout(() => document.getElementById('sw-search-input').focus(), 50);
+}
+
+function renderSoftwareList(list) {
+  document.getElementById('sw-popup-body').innerHTML = (!list || !list.length)
+    ? '<p class="sw-empty">Нічого не знайдено</p>'
+    : list.map(s => `<div class="sw-item">${s}</div>`).join('');
+}
+
+function filterSoftware(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) { 
+    renderSoftwareList(currentSwList); 
+    return; 
+  }
+  const filtered = currentSwList.filter(s => s.toLowerCase().includes(q));
+  renderSoftwareList(filtered);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ПІДТВЕРДЖЕННЯ БРОНЮВАННЯ → зберігаємо в bookings.json
+// ═══════════════════════════════════════════════════════════
+document.getElementById('confirmBtn').addEventListener('click', async () => {
+  const session = getSession();
+  if (!session) { openLogin(); return; }
+  if (!selectedSlots.size) return;
+
+  // Завантажуємо поточні бронювання
+  let existing = [];
+  try {
+    const r = await fetch('/api/bookings');
+    existing = await r.json();
+  } catch(e) { existing = []; }
+
+  const newBookings = [];
+  for (const [, slot] of selectedSlots) {
+    // Перевіряємо чи вже не зайнято
+    const conflict = existing.find(b =>
+      b.date === slot.dateStr &&
+      b.room === slot.room &&
+      b.pairIndex === slot.pairIdx
+    );
+    if (conflict) continue;
+
+    newBookings.push({
+      date:         slot.dateStr,
+      room:         slot.room,
+      pairIndex:    slot.pairIdx,
+      pairName:     PAIR_NAMES[slot.pairIdx],
+      time:         PAIR_TIMES[slot.pairIdx],
+      teacherLogin: session.login,
+      teacherName:  session.name,
+      id:           Date.now() + Math.random()
+    });
+  }
+
+  const merged = [...existing, ...newBookings];
+  // Оновлюємо кеш
+  cachedBookings = merged;
+
+  try {
+    await fetch('/api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(merged, null, 2)
+    });
+  } catch(e) {
+    alert('Помилка збереження. Перевірте з\'єднання з сервером.');
+    return;
+  }
+
+  // Показуємо модалку успіху
+  showBookingSuccess(newBookings);
+
+  // Скидаємо вибір
+  selectedSlots.clear();
+  updateConfirmBtn();
+  // Знімаємо .active з усіх кнопок (десктоп + мобільний)
+  document.querySelectorAll('.slots button.active, .mob-pair-btn.active').forEach(b => b.classList.remove('active'));
+});
+
+// ═══════════════════════════════════════════════════════════
+//  МОДАЛКА УСПІХУ
+// ═══════════════════════════════════════════════════════════
+function showBookingSuccess(bookings) {
+  const count = bookings.length;
+  document.getElementById('bookingSuccessCount').textContent = `${count} ${pairWord(count)}`;
+
+  const listEl = document.getElementById('bookingSuccessList');
+  listEl.innerHTML = '';
+
+  const sorted = [...bookings].sort((a, b) => a.date.localeCompare(b.date) || a.pairIndex - b.pairIndex);
+
+  sorted.forEach(b => {
+    const d = new Date(b.date + 'T00:00:00');
+    const item = document.createElement('div');
+    item.className = 'bs-item';
+    item.innerHTML =
+      `<div class="bs-item-date">` +
+        `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>` +
+        `${DAY_NAMES[d.getDay()]}, ${d.getDate()} ${MONTH_NAMES_GEN[d.getMonth()]}` +
+      `</div>` +
+      `<div class="bs-item-meta">` +
+        `<span class="bs-item-pair">• ${b.pairName}</span>` +
+        `<span class="bs-item-room">` +
+          `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>` +
+          `Ауд. ${b.room}` +
+        `</span>` +
+      `</div>`;
+    listEl.appendChild(item);
+  });
+
+  document.getElementById('bookingSuccessOverlay').style.display = 'flex';
+}
+
+function closeBookingSuccess() {
+  document.getElementById('bookingSuccessOverlay').style.display = 'none';
+}
+
+function pairWord(n) {
+  if (n === 1) return 'пару';
+  if (n >= 2 && n <= 4) return 'пари';
+  return 'пар';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  MONTH PICKER
+// ═══════════════════════════════════════════════════════════
+let mpYear = current.getFullYear();
+
+function openMonthPicker() {
+  mpYear = current.getFullYear();
+  renderMonthPicker();
+  document.getElementById('monthPickerOverlay').style.display = 'flex';
+}
+
+function closeMonthPicker() {
+  document.getElementById('monthPickerOverlay').style.display = 'none';
+}
+
+function renderMonthPicker() {
+  document.getElementById('mpYear').textContent = mpYear;
+  const grid = document.getElementById('mpGrid');
+  grid.innerHTML = '';
+  MONTH_NAMES.forEach((name, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'mp-month-btn';
+    btn.textContent = name;
+    const isActive = mpYear === current.getFullYear() && idx === current.getMonth();
+    if (isActive) btn.classList.add('active');
+    btn.onclick = () => {
+      current = new Date(mpYear, idx, 1);
+      closeMonthPicker();
+      initGrid();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function goToToday() {
+  current = new Date(); current.setDate(1);
+  closeMonthPicker();
+  initGrid();
+}
+
+document.getElementById('mpPrevYear').addEventListener('click', () => {
+  mpYear--; renderMonthPicker();
+});
+document.getElementById('mpNextYear').addEventListener('click', () => {
+  mpYear++; renderMonthPicker();
+});
+
+// ═══════════════════════════════════════════════════════════
+//  МОЇ ЗАПИСИ
+// ═══════════════════════════════════════════════════════════
+async function openMyBookings() {
+  const session = getSession();
+  if (!session) { openLogin(); return; }
+
+  const drop = document.getElementById('userDropdown');
+  if (drop) drop.classList.remove('open');
+
+  let allBookings = [];
+  try {
+    const r = await fetch('/api/bookings');
+    allBookings = await r.json();
+  } catch(e) {}
+
+  const mine = allBookings
+    .filter(b => b.teacherLogin === session.login)
+    .sort((a, b) => a.date.localeCompare(b.date) || a.pairIndex - b.pairIndex);
+
+  const n = mine.length;
+  document.getElementById('myBookingsCount').textContent =
+    `${n} ${n === 1 ? 'запис' : n >= 2 && n <= 4 ? 'записи' : 'записів'}`;
+
+  const listEl = document.getElementById('myBookingsList');
+  listEl.innerHTML = '';
+
+  if (!mine.length) {
+    listEl.innerHTML = '<p class="mb-empty">У вас ще немає бронювань</p>';
+  } else {
+    mine.forEach(b => {
+      const d = new Date(b.date + 'T00:00:00');
+      const dateLabel = `${DAY_NAMES[d.getDay()]}, ${d.getDate()} ${MONTH_NAMES_GEN[d.getMonth()]} ${d.getFullYear()} р.`;
+
+      const item = document.createElement('div');
+      item.className = 'mb-item';
+      item.innerHTML =
+        `<div class="mb-info">` +
+          `<div class="mb-date">${dateLabel}</div>` +
+          `<div class="mb-meta">` +
+            `<span class="mb-pair">` +
+              `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>` +
+              `${b.pairName}` +
+            `</span>` +
+            `<span class="mb-room">` +
+              `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>` +
+              `Ауд. ${b.room}` +
+            `</span>` +
+          `</div>` +
+        `</div>` +
+        `<button class="mb-delete-btn" title="Видалити">` +
+          `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>` +
+        `</button>`;
+
+      item.querySelector('.mb-delete-btn').addEventListener('click', () => deleteBooking(b.id, item));
+      listEl.appendChild(item);
+    });
+  }
+
+  document.getElementById('myBookingsOverlay').style.display = 'flex';
+}
+
+function closeMyBookings() {
+  document.getElementById('myBookingsOverlay').style.display = 'none';
+}
+
+async function deleteBooking(bookingId, itemEl) {
+  let allBookings = [];
+  try {
+    const r = await fetch('/api/bookings');
+    allBookings = await r.json();
+  } catch(e) { return; }
+
+  const updated = allBookings.filter(b => String(b.id) !== String(bookingId));
+
+  try {
+    await fetch('/api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updated, null, 2)
+    });
+  } catch(e) { 
+    alert('Помилка видалення'); 
+    return; 
+  }
+
+  itemEl.style.transition = 'opacity 0.2s, transform 0.2s';
+  itemEl.style.opacity = '0';
+  itemEl.style.transform = 'translateX(16px)';
+  
+  setTimeout(() => {
+    itemEl.remove();
+    const remaining = document.querySelectorAll('#myBookingsList .mb-item').length;
+    document.getElementById('myBookingsCount').textContent =
+      `${remaining} ${remaining === 1 ? 'запис' : remaining >= 2 && remaining <= 4 ? 'записи' : 'записів'}`;
+    if (!remaining) {
+      document.getElementById('myBookingsList').innerHTML = '<p class="mb-empty">У вас ще немає бронювань</p>';
+    }
+  }, 200);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ТЕМА
+// ═══════════════════════════════════════════════════════════
+const THEME_KEY = 'kefk-theme';
+function applyTheme(dark) {
+  document.body.classList.toggle('dark-theme', dark);
+  const sun  = document.getElementById('themeIconSun');
+  const moon = document.getElementById('themeIconMoon');
+  if (sun)  sun.style.display  = dark ? 'none' : '';
+  if (moon) moon.style.display = dark ? ''     : 'none';
+  localStorage.setItem(THEME_KEY, dark ? 'dark' : 'light');
+}
+const _savedTheme = localStorage.getItem(THEME_KEY);
+applyTheme(_savedTheme === 'dark');
+document.getElementById('themeToggle').addEventListener('click', () => {
+  applyTheme(!document.body.classList.contains('dark-theme'));
+});
+
+// ═══════════════════════════════════════════════════════════
+//  ДЕСКТОП CALENDAR POPUP
+// ═══════════════════════════════════════════════════════════
+let _deskCalYear, _deskCalMonth, _deskCalAnchor;
+
+function openDesktopDayPicker(year, month, anchorEl) {
+  _deskCalYear   = year;
+  _deskCalMonth  = month;
+  _deskCalAnchor = anchorEl;
+
+  renderDeskCal(year, month);
+
+  const popup = document.getElementById('deskCalPopup');
+  popup.style.display = 'block';
+
+  // Позиціонуємо fixed відносно viewport
+  const rect = anchorEl.getBoundingClientRect();
+  const popupW = 290;
+  const popupH = 320;
+
+  let left = rect.left + rect.width / 2 - popupW / 2;
+  let top  = rect.bottom + 6;
+
+  // Не виходимо за межі екрану
+  if (left + popupW > window.innerWidth - 8) left = window.innerWidth - popupW - 8;
+  if (left < 8) left = 8;
+  if (top + popupH > window.innerHeight - 8) top = rect.top - popupH - 6;
+
+  popup.style.left = left + 'px';
+  popup.style.top  = top  + 'px';
+
+  requestAnimationFrame(() => popup.classList.add('desk-cal-open'));
+
+  setTimeout(() => {
+    document.addEventListener('click', closeDeskCalOutside);
+  }, 0);
+}
+
+function closeDeskCalOutside(e) {
+  const popup = document.getElementById('deskCalPopup');
+  if (!popup.contains(e.target) && !e.target.classList.contains('header')) {
+    closeDeskCal();
+  }
+}
+
+function closeDeskCal() {
+  const popup = document.getElementById('deskCalPopup');
+  popup.classList.remove('desk-cal-open');
+  setTimeout(() => { popup.style.display = 'none'; }, 200);
+  document.removeEventListener('click', closeDeskCalOutside);
+}
+
+function renderDeskCal(year, month) {
+  const grid  = document.getElementById('deskCalGrid');
+  const title = document.getElementById('deskCalTitle');
+  title.textContent = MONTH_NAMES[month] + ' ' + year;
+  grid.innerHTML = '';
+
+  const firstDay    = new Date(year, month, 1).getDay();
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today       = new Date();
+
+  for (let i = 0; i < startOffset; i++) {
+    const e = document.createElement('div');
+    e.className = 'desk-cal-cell desk-cal-empty';
+    grid.appendChild(e);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const cell = document.createElement('button');
+    cell.className = 'desk-cal-cell';
+    cell.textContent = day;
+
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dow = new Date(year, month, day).getDay();
+    if (dow === 0 || dow === 6) cell.classList.add('desk-cal-weekend');
+
+    const isToday    = year === today.getFullYear() && month === today.getMonth() && day === today.getDate();
+    const isSelected = dateStr === (window._dpSelectedDate || '');
+
+    if (isToday && isSelected) {
+      cell.classList.add('desk-cal-today', 'desk-cal-selected');
+    } else if (isToday) {
+      cell.classList.add('desk-cal-today');
+    } else if (isSelected) {
+      cell.classList.add('desk-cal-selected');
+    }
+
+    cell.addEventListener('click', ev => {
+      ev.stopPropagation();
+      window._dpSelectedDate = dateStr;
+      closeDeskCal();
+
+      const wrapper = document.getElementById('wrapper');
+      const targetBlock = wrapper.querySelector(`.month-block[data-year="${year}"][data-month="${month}"]`);
+      if (targetBlock) {
+        const colCount = new Date(year, month + 1, 0).getDate();
+        const colW = targetBlock.offsetWidth / colCount;
+        const scrollTo = targetBlock.offsetLeft + (day - 1) * colW - wrapper.clientWidth / 2 + colW / 2;
+
+        // Оновлюємо підсвічування — знімаємо старе і перебудовуємо блок
+        const newBlock = buildMonthBlock(year, month);
+        if (newBlock) {
+          targetBlock.replaceWith(newBlock);
+          const newTarget = wrapper.querySelector(`.month-block[data-year="${year}"][data-month="${month}"]`);
+          if (newTarget) {
+            const colW2 = newTarget.offsetWidth / colCount;
+            const scrollTo2 = newTarget.offsetLeft + (day - 1) * colW2 - wrapper.clientWidth / 2 + colW2 / 2;
+            wrapper.scrollTo({ left: Math.max(0, scrollTo2), behavior: 'smooth' });
+          }
+        } else {
+          wrapper.scrollTo({ left: Math.max(0, scrollTo), behavior: 'smooth' });
+        }
+      } else {
+        navigateToMonth(year, month, dateStr);
+      }
+    });
+    grid.appendChild(cell);
+  }
+
+  // Навігація стрілками
+  document.getElementById('deskCalPrev').onclick = ev => {
+    ev.stopPropagation();
+    let m = _deskCalMonth - 1, y = _deskCalYear;
+    if (m < 0) { m = 11; y--; }
+    _deskCalYear = y; _deskCalMonth = m;
+    renderDeskCal(y, m);
+  };
+  document.getElementById('deskCalNext').onclick = ev => {
+    ev.stopPropagation();
+    let m = _deskCalMonth + 1, y = _deskCalYear;
+    if (m > 11) { m = 0; y++; }
+    _deskCalYear = y; _deskCalMonth = m;
+    renderDeskCal(y, m);
+  };
+
+  // Кнопка "Сьогодні"
+  document.getElementById('deskCalTodayBtn').onclick = ev => {
+    ev.stopPropagation();
+    const t = new Date();
+    const dateStr = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+    // Очищаємо обраний день — сьогодні вже підсвічений як header-today
+    window._dpSelectedDate = null;
+    closeDeskCal();
+
+    // Перебудовуємо поточний місяць щоб прибрати header-selected
+    const wrapper = document.getElementById('wrapper');
+    const todayBlock = wrapper.querySelector(`.month-block[data-year="${t.getFullYear()}"][data-month="${t.getMonth()}"]`);
+    if (todayBlock) {
+      const newBlock = buildMonthBlock(t.getFullYear(), t.getMonth());
+      if (newBlock) todayBlock.replaceWith(newBlock);
+    }
+    // Також прибираємо з інших місяців
+    wrapper.querySelectorAll('.header-selected').forEach(h => h.classList.remove('header-selected'));
+    wrapper.querySelectorAll('.cell-selected').forEach(c => c.classList.remove('cell-selected'));
+
+    scrollToDate(dateStr);
+  };
+}
+
+// ═══════════════════════════════════════════════════════════
+//  DAY PICKER (мобільний)
+// ═══════════════════════════════════════════════════════════
+const MONTH_NAMES_UA = ['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+
+function openDayPicker(year, month) {
+  const overlay = document.getElementById('dayPickerOverlay');
+  const title   = document.getElementById('dayPickerTitle');
+
+  // Зберігаємо поточний місяць в overlay для навігації
+  overlay._year  = year;
+  overlay._month = month;
+
+  renderDayPickerGrid(year, month);
+  title.textContent = MONTH_NAMES_UA[month] + ' ' + year;
+
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('dp-open'));
+}
+
+function openDayPicker(year, month) {
+  const overlay = document.getElementById('dayPickerOverlay');
+  overlay._year  = year;
+  overlay._month = month;
+  overlay._loadedMonths = [];
+
+  const scroll = document.getElementById('dayPickerScroll');
+  scroll.innerHTML = '';
+
+  // Підвантажуємо 3 місяці одразу
+  dpAppendMonth(year, month - 1);
+  dpAppendMonth(year, month);
+  dpAppendMonth(year, month + 1);
+
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => {
+    overlay.classList.add('dp-open');
+    // Скролимо до поточного місяця (другий блок)
+    setTimeout(() => {
+      const blocks = scroll.querySelectorAll('.dp-month-block');
+      if (blocks[1]) blocks[1].scrollIntoView({ behavior: 'instant' });
+    }, 50);
+  });
+
+  // Infinite scroll
+  scroll.onscroll = () => {
+    const nearBottom = scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 200;
+    if (nearBottom) {
+      const last = overlay._loadedMonths[overlay._loadedMonths.length - 1];
+      let ny = last.year, nm = last.month + 1;
+      if (nm > 11) { nm = 0; ny++; }
+      dpAppendMonth(ny, nm);
+    }
+    // Оновлюємо заголовок по видимому місяцю
+    const blocks = scroll.querySelectorAll('.dp-month-block');
+    for (const b of blocks) {
+      const rect = b.getBoundingClientRect();
+      const scrollRect = scroll.getBoundingClientRect();
+      if (rect.top <= scrollRect.top + 60) {
+        document.getElementById('dayPickerTitle').textContent =
+          MONTH_NAMES_UA[+b.dataset.month] + ' ' + b.dataset.year;
+        overlay._year  = +b.dataset.year;
+        overlay._month = +b.dataset.month;
+      }
+    }
+  };
+}
+
+function dpAppendMonth(year, month) {
+  // Нормалізуємо
+  if (month > 11) { month -= 12; year++; }
+  if (month < 0)  { month += 12; year--; }
+
+  const overlay = document.getElementById('dayPickerOverlay');
+  const scroll  = document.getElementById('dayPickerScroll');
+
+  // Не дублюємо
+  const key = `${year}-${month}`;
+  if (overlay._loadedMonths.find(m => m.key === key)) return;
+  overlay._loadedMonths.push({ year, month, key });
+
+  const today = new Date();
+
+  const block = document.createElement('div');
+  block.className = 'dp-month-block';
+  block.dataset.year  = year;
+  block.dataset.month = month;
+
+  // Заголовок місяця всередині скролу
+  const mTitle = document.createElement('div');
+  mTitle.className = 'dp-month-title';
+  mTitle.textContent = MONTH_NAMES_UA[month] + ' ' + year;
+  block.appendChild(mTitle);
+
+  // Дні тижня
+  const weekdays = document.createElement('div');
+  weekdays.className = 'day-picker-weekdays';
+  weekdays.innerHTML = '<span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Нд</span>';
+  block.appendChild(weekdays);
+
+  // Сітка
+  const grid = document.createElement('div');
+  grid.className = 'day-picker-grid';
+
+  const firstDay    = new Date(year, month, 1).getDay();
+  const startOffset = (firstDay === 0 ? 6 : firstDay - 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  for (let i = 0; i < startOffset; i++) {
+    const e = document.createElement('div');
+    e.className = 'dp-cell dp-empty';
+    grid.appendChild(e);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const cell = document.createElement('button');
+    cell.className = 'dp-cell';
+    cell.textContent = day;
+
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dow = new Date(year, month, day).getDay();
+    if (dow === 0 || dow === 6) cell.classList.add('dp-weekend');
+
+    // Сьогодні — жирний з крапкою (як Windows)
+    if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+      cell.classList.add('dp-today');
+    }
+
+    // Обраний день — рамка
+    if (dateStr === (window._dpSelectedDate || '')) {
+      cell.classList.add('dp-selected');
+    }
+
+    cell.addEventListener('click', () => {
+      // Знімаємо попередній selected
+      document.querySelectorAll('.dp-cell.dp-selected').forEach(c => c.classList.remove('dp-selected'));
+      cell.classList.add('dp-selected');
+      window._dpSelectedDate = dateStr;
+      closeDayPicker();
+      scrollToDate(dateStr);
+    });
+    grid.appendChild(cell);
+  }
+
+  block.appendChild(grid);
+  scroll.appendChild(block);
+}
+
+function renderDayPickerGrid(year, month) {
+  // Тепер просто перевідкриваємо з нового місяця
+  const scroll = document.getElementById('dayPickerScroll');
+  const overlay = document.getElementById('dayPickerOverlay');
+  scroll.innerHTML = '';
+  overlay._loadedMonths = [];
+  dpAppendMonth(year, month - 1);
+  dpAppendMonth(year, month);
+  dpAppendMonth(year, month + 1);
+  setTimeout(() => {
+    const blocks = scroll.querySelectorAll('.dp-month-block');
+    if (blocks[1]) blocks[1].scrollIntoView({ behavior: 'instant' });
+  }, 30);
+  document.getElementById('dayPickerTitle').textContent = MONTH_NAMES_UA[month] + ' ' + year;
+  overlay._year  = year;
+  overlay._month = month;
+}
+
+function closeDayPicker() {
+  const overlay = document.getElementById('dayPickerOverlay');
+  overlay.classList.remove('dp-open');
+  setTimeout(() => { overlay.style.display = 'none'; }, 280);
+}
+
+function scrollToDate(dateStr) {
+  const wrapper = document.getElementById('wrapper');
+
+  if (isMobile()) {
+    // Мобільний — шукаємо по mob-col
+    const cols = wrapper.querySelectorAll('.mob-col');
+    for (const col of cols) {
+      const dateEl = col.querySelector('[data-date="' + dateStr + '"]');
+      if (dateEl) {
+        wrapper.scrollTo({ left: col.offsetLeft, behavior: 'smooth' });
+        // Підсвічуємо в day picker
+        document.querySelectorAll('.dp-cell.dp-selected').forEach(c => c.classList.remove('dp-selected'));
+        const allCells = document.querySelectorAll('.dp-month-block .dp-cell');
+        allCells.forEach(c => {
+          const block = c.closest('.dp-month-block');
+          if (!block) return;
+          const bYear  = parseInt(block.dataset.year);
+          const bMonth = parseInt(block.dataset.month);
+          const [sYear, sMonth, sDay] = dateStr.split('-').map(Number);
+          if (bYear === sYear && bMonth === sMonth - 1 && parseInt(c.textContent) === sDay && !c.classList.contains('dp-empty')) {
+            c.classList.add('dp-selected');
+          }
+        });
+        return;
+      }
+    }
+  } else {
+    // Десктоп — знаходимо місяць і день по індексу
+    const [sYear, sMonth, sDay] = dateStr.split('-').map(Number);
+    const targetBlock = wrapper.querySelector(`.month-block[data-year="${sYear}"][data-month="${sMonth - 1}"]`);
+    if (targetBlock) {
+      const colCount = new Date(sYear, sMonth, 0).getDate();
+      const colW = targetBlock.offsetWidth / colCount;
+      const scrollTo = targetBlock.offsetLeft + (sDay - 1) * colW - wrapper.clientWidth / 2 + colW / 2;
+      wrapper.scrollTo({ left: Math.max(0, scrollTo), behavior: 'smooth' });
+      return;
+    }
+  }
+
+  const [y, m] = dateStr.split('-').map(Number);
+  navigateToMonth(y, m - 1, dateStr);
+}
+
+function dpGoToday() {
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  // Оновлюємо обраний день на сьогодні
+  window._dpSelectedDate = dateStr;
+  closeDayPicker();
+  // Якщо сьогодні вже є в wrapper — просто скролимо
+  const wrapper = document.getElementById('wrapper');
+  const cols = wrapper.querySelectorAll('.mob-col');
+  let found = false;
+  for (const col of cols) {
+    if (col.querySelector('[data-date="' + dateStr + '"]')) {
+      wrapper.scrollTo({ left: col.offsetLeft, behavior: 'smooth' });
+      found = true;
+      break;
+    }
+  }
+  if (!found) {
+    wrapper.innerHTML = '';
+    const block = buildMobileMonth(today.getFullYear(), today.getMonth());
+    if (block) {
+      wrapper.appendChild(block);
+      wrapper.scrollLeft = 0;
+      updateTitle();
+      setTimeout(() => {
+        const c2 = wrapper.querySelectorAll('.mob-col');
+        for (const col of c2) {
+          if (col.querySelector('[data-date="' + dateStr + '"]')) {
+            wrapper.scrollTo({ left: col.offsetLeft, behavior: 'smooth' });
+            break;
+          }
+        }
+      }, 80);
+    }
+  }
+}
+
+function dpNavigate(dir) {
+  const overlay = document.getElementById('dayPickerOverlay');
+  let year  = overlay._year;
+  let month = overlay._month + dir;
+  if (month > 11) { month = 0;  year++; }
+  if (month < 0)  { month = 11; year--; }
+  renderDayPickerGrid(year, month);
+}
+
+function navigateToMonth(year, month, targetDate) {
+  const wrapper = document.getElementById('wrapper');
+
+  if (isMobile()) {
+    // Мобільний — шукаємо mob-month
+    const existing = wrapper.querySelector(`.mob-month[data-year="${year}"][data-month="${month}"]`);
+    if (existing) { setTimeout(() => scrollToDate(targetDate), 50); return; }
+    const block = buildMobileMonth(year, month);
+    if (block) { wrapper.appendChild(block); updateTitle(); setTimeout(() => scrollToDate(targetDate), 80); }
+  } else {
+    // Десктоп — шукаємо month-block
+    const existing = wrapper.querySelector(`.month-block[data-year="${year}"][data-month="${month}"]`);
+    if (existing) { setTimeout(() => scrollToDate(targetDate), 50); return; }
+    // Додаємо роздільник і блок
+    const sep = buildSeparator(year, month);
+    wrapper.appendChild(sep);
+    const block = buildMonthBlock(year, month);
+    if (block) {
+      loadedMonths.push({ year, month });
+      wrapper.appendChild(block);
+      updateTitle();
+      setTimeout(() => scrollToDate(targetDate), 80);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  АВТОРИЗАЦІЯ
+// ═══════════════════════════════════════════════════════════
+const USERS = [
+  { login: 'admin',    password: 'admin123', role: 'admin',   name: 'Адміністратор' },
+  { login: 'aushev',   password: '123',      role: 'teacher', name: 'Аушев М.О' },
+  { login: 'petrenko', password: '123',      role: 'teacher', name: 'Петренко Ю.О' },
+];
+function getSession()  { try { return JSON.parse(localStorage.getItem('clSession'))||null; } catch { return null; } }
+function setSession(u) { localStorage.setItem('clSession', JSON.stringify(u)); }
+function clearSession(){ localStorage.removeItem('clSession'); }
+function openLogin()   { document.getElementById('loginOverlay').style.display='flex'; document.getElementById('loginInput').focus(); }
+function closeLogin()  { document.getElementById('loginOverlay').style.display='none'; document.getElementById('loginError').style.display='none'; }
+function togglePass()  { const i=document.getElementById('passInput'); i.type=i.type==='password'?'text':'password'; }
+function submitLogin() {
+  const login = document.getElementById('loginInput').value.trim();
+  const pass  = document.getElementById('passInput').value;
+  const user  = USERS.find(u=>u.login===login&&u.password===pass);
+  if (user) { setSession({login:user.login,role:user.role,name:user.name}); closeLogin(); updateLoginBtn(); }
+  else document.getElementById('loginError').style.display='block';
+}
+document.getElementById('passInput').addEventListener('keydown', e => { if(e.key==='Enter') submitLogin(); });
+
+function updateLoginBtn() {
+  const session = getSession();
+  const btn  = document.getElementById('openLogin');
+  const wrap = document.getElementById('authWrap');
+  const old  = document.getElementById('userDropdown'); if (old) old.remove();
+
+  if (session) {
+    btn.className = 'home-avatar-btn';
+    btn.innerHTML = `
+      <span class="home-avatar-letter">${session.name.charAt(0).toUpperCase()}</span>
+      <span class="home-avatar-name">${session.name}</span>
+      <svg class="home-avatar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+    btn.title = session.name;
+
+    const drop = document.createElement('div');
+    drop.id = 'userDropdown'; drop.className = 'user-dropdown';
+    drop.innerHTML = `
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-name">${session.name}</div>
+        <div class="user-dropdown-login">@${session.login}</div>
+      </div>
+      <button class="user-dropdown-item" id="dropTheme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        Змінити тему
+      </button>
+      <button class="user-dropdown-item" id="dropMyBookings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Мої записи
+      </button>
+      <button class="user-dropdown-item danger" id="dropLogout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Вийти
+      </button>`;
+    wrap.appendChild(drop);
+    btn.onclick = e => { e.preventDefault(); e.stopPropagation(); drop.classList.toggle('open'); };
+    drop.querySelector('#dropTheme').onclick    = () => { drop.classList.remove('open'); applyTheme(!document.body.classList.contains('dark-theme')); };
+    drop.querySelector('#dropMyBookings').onclick = () => { drop.classList.remove('open'); openMyBookings(); };
+    drop.querySelector('#dropLogout').onclick   = () => { clearSession(); location.reload(); };
+    setTimeout(() => {
+      document.addEventListener('click', function h(e) { if (!wrap.contains(e.target)) { drop.classList.remove('open'); document.removeEventListener('click', h); } });
+    }, 0);
+  } else {
+    btn.className = 'nav-btn secondary-btn';
+    btn.textContent = 'Вхід';
+    btn.title = '';
+    btn.onclick = openLogin;
+    document.querySelector('#themeToggle').style.display = 'flex';
+  }
+}
+updateLoginBtn();
+
+// Перебудова при зміні розміру
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(initGrid, 250);
+});
+
+// ═══════════════════════════════════════════════════════════
+//  СТАРТ
+// ═══════════════════════════════════════════════════════════
+initGrid();
+</script>
+
+</body>
+</html>

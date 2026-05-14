@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>KEFK — Бронювання аудиторій</title>
+  <link rel="stylesheet" href="one.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="home-page">
+
+<div class="home-wrap">
+
+  <canvas id="home-canvas"></canvas>
+
+  <!-- ===== HEADER ===== -->
+  <header class="home-header">
+    <div class="home-nav">
+      <div class="home-logo">
+        <div class="home-logo-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+        </div>
+        <span>KEFK</span>
+      </div>
+
+      <div class="home-header-right">
+        <!-- Іконка теми — тільки на десктопі -->
+        <button class="home-theme-btn home-theme-btn--desktop" id="themeToggle" title="Змінити тему">
+          <svg id="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg id="themeIconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <div style="position:relative" id="authWrap">
+          <a href="#" class="nav-btn secondary-btn" id="openLogin">Вхід</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <main class="home-main">
+    <section class="home-hero">
+      <h1>Запис у комп'ютерні аудиторії</h1>
+      <p id="heroSubtitle" class="hero-subtitle-anim">Обирай зручний час, потрібну аудиторію та записуйся онлайн всього за пару кліків.</p>
+      <div class="home-dots" id="heroDots">
+        <span class="home-dot active"></span>
+        <span class="home-dot"></span>
+        <span class="home-dot"></span>
+        <span class="home-dot"></span>
+      </div>
+    </section>
+
+    <!-- ===== CARDS ===== -->
+    <section class="home-cards">
+
+      <div class="home-card">
+        <div class="home-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"/>
+            <line x1="8" y1="12" x2="21" y2="12"/>
+            <line x1="8" y1="18" x2="21" y2="18"/>
+            <line x1="3" y1="6" x2="3.01" y2="6"/>
+            <line x1="3" y1="12" x2="3.01" y2="12"/>
+            <line x1="3" y1="18" x2="3.01" y2="18"/>
+          </svg>
+        </div>
+        <h3>Список аудиторій</h3>
+        <p>Перегляд доступних приміщень та їх характеристик.</p>
+        <a href="rooms.html" class="home-card-btn">
+          Переглянути
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="home-card home-card--featured">
+        <div class="home-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <h3>Записатися в аудиторію</h3>
+        <p>Швидке бронювання місця на зручний час.</p>
+        <a href="note.html" class="home-card-btn home-card-btn--primary">
+          Записатися
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="home-card">
+        <div class="home-card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <h3>Встановлені програми</h3>
+        <p>Перелік софту, доступного в кожній аудиторії.</p>
+        <a href="#" class="home-card-btn">
+          Перелік софту
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+    </section>
+  </main>
+
+</div>
+
+<!-- ===== МОДАЛКА ВХОДУ ===== -->
+<div id="loginOverlay" class="login-overlay" onclick="if(event.target===this)closeLogin()">
+  <div class="login-modal">
+    <button class="login-close" onclick="closeLogin()">&#x2715;</button>
+    <h2>Вхід до системи</h2>
+    <div class="login-field">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <input type="text" id="loginInput" placeholder="Логін / Пошта" autocomplete="off" />
+    </div>
+    <div class="login-field">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <input type="password" id="passInput" placeholder="Пароль" />
+      <button class="eye-btn" onclick="togglePass()" tabindex="-1">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <div class="login-options">
+      <label class="login-remember"><input type="checkbox" /> Запам'ятати мене</label>
+      <a href="#" class="login-forgot">Забули пароль?</a>
+    </div>
+    <button class="login-submit-btn" onclick="submitLogin()">Увійти</button>
+    <p id="loginError" class="login-error-msg" style="display:none">Невірний логін або пароль</p>
+    <p class="login-hint">Для отримання облікових даних зверніться до Лаборанта</p>
+  </div>
+</div>
+
+<!-- ===== МОДАЛКА "МОЇ ЗАПИСИ" ===== -->
+<div id="myBookingsOverlay" class="my-bookings-overlay" onclick="if(event.target===this)closeMyBookings()">
+  <div class="my-bookings-modal">
+    <div class="my-bookings-header">
+      <div>
+        <h2 class="my-bookings-title">Мої записи</h2>
+        <p class="my-bookings-count" id="myBookingsCount"></p>
+      </div>
+      <button class="my-bookings-close" onclick="closeMyBookings()">&#x2715;</button>
+    </div>
+    <div class="my-bookings-list" id="myBookingsList"></div>
+  </div>
+</div>
+
+<script>
+const USERS = [
+  { login: 'admin',    password: 'admin123', role: 'admin',   name: 'Адміністратор' },
+  { login: 'aushev',   password: '123',      role: 'teacher', name: 'Аушев М.О' },
+  { login: 'petrenko', password: '123',      role: 'teacher', name: 'Петренко Ю.О' },
+];
+
+const DAY_NAMES_UA = ["Неділя","Понеділок","Вівторок","Середа","Четвер","П'ятниця","Субота"];
+const MONTH_UA_GEN = ["січня","лютого","березня","квітня","травня","червня",
+                      "липня","серпня","вересня","жовтня","листопада","грудня"];
+
+function getSession() {
+  try { return JSON.parse(localStorage.getItem('clSession')) || null; } catch { return null; }
+}
+function setSession(u) { localStorage.setItem('clSession', JSON.stringify(u)); }
+function clearSession() { localStorage.removeItem('clSession'); }
+
+function openLogin() {
+  document.getElementById('loginOverlay').style.display = 'flex';
+  document.getElementById('loginInput').focus();
+}
+function closeLogin() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('loginError').style.display = 'none';
+}
+function togglePass() {
+  const inp = document.getElementById('passInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+function submitLogin() {
+  const login = document.getElementById('loginInput').value.trim();
+  const pass  = document.getElementById('passInput').value;
+  const user  = USERS.find(u => u.login === login && u.password === pass);
+  if (user) {
+    setSession({ login: user.login, role: user.role, name: user.name });
+    closeLogin();
+    updateLoginBtn();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+document.getElementById('passInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitLogin();
+});
+
+async function openMyBookings() {
+  const session = getSession();
+  if (!session) { openLogin(); return; }
+  const drop = document.getElementById('userDropdown');
+  if (drop) drop.classList.remove('open');
+  let allBookings = [];
+  try { const r = await fetch('/api/bookings'); allBookings = await r.json(); } catch(e) {}
+  const mine = allBookings
+    .filter(b => b.teacherLogin === session.login)
+    .sort((a, b) => a.date.localeCompare(b.date) || a.pairIndex - b.pairIndex);
+  const n = mine.length;
+  document.getElementById('myBookingsCount').textContent =
+    n + ' ' + (n === 1 ? 'запис' : n >= 2 && n <= 4 ? 'записи' : 'записів');
+  const listEl = document.getElementById('myBookingsList');
+  listEl.innerHTML = '';
+  if (!mine.length) {
+    listEl.innerHTML = '<p class="mb-empty">У вас ще немає бронювань</p>';
+  } else {
+    mine.forEach(b => {
+      const d = new Date(b.date + 'T00:00:00');
+      const dateLabel = DAY_NAMES_UA[d.getDay()] + ', ' + d.getDate() + ' ' + MONTH_UA_GEN[d.getMonth()] + ' ' + d.getFullYear() + ' р.';
+      const item = document.createElement('div');
+      item.className = 'mb-item';
+      item.innerHTML =
+        `<input type="checkbox" class="mb-checkbox" />` +
+        `<div class="mb-info"><div class="mb-date">${dateLabel}</div><div class="mb-meta">` +
+        `<span class="mb-pair"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${b.pairName}</span>` +
+        `<span class="mb-room"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Ауд. ${b.room}</span>` +
+        `</div></div>` +
+        `<button class="mb-delete-btn" title="Видалити"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>`;
+      item.querySelector('.mb-delete-btn').addEventListener('click', () => deleteBooking(b.id, item));
+      listEl.appendChild(item);
+    });
+  }
+  document.getElementById('myBookingsOverlay').style.display = 'flex';
+}
+
+function closeMyBookings() {
+  document.getElementById('myBookingsOverlay').style.display = 'none';
+}
+
+async function deleteBooking(bookingId, itemEl) {
+  let allBookings = [];
+  try { const r = await fetch('/api/bookings'); allBookings = await r.json(); } catch(e) { return; }
+  const updated = allBookings.filter(b => String(b.id) !== String(bookingId));
+  try {
+    await fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updated, null, 2) });
+  } catch(e) { alert('Помилка видалення'); return; }
+  itemEl.style.transition = 'opacity 0.2s, transform 0.2s';
+  itemEl.style.opacity = '0';
+  itemEl.style.transform = 'translateX(16px)';
+  setTimeout(() => {
+    itemEl.remove();
+    const remaining = document.querySelectorAll('#myBookingsList .mb-item').length;
+    document.getElementById('myBookingsCount').textContent =
+      remaining + ' ' + (remaining === 1 ? 'запис' : remaining >= 2 && remaining <= 4 ? 'записи' : 'записів');
+    if (!remaining) document.getElementById('myBookingsList').innerHTML = '<p class="mb-empty">У вас ще немає бронювань</p>';
+  }, 200);
+}
+
+function updateLoginBtn() {
+  const session = getSession();
+  const btn = document.getElementById('openLogin');
+  const wrap = document.getElementById('authWrap');
+  const old = document.getElementById('userDropdown');
+  if (old) old.remove();
+
+  if (session) {
+    btn.className = 'home-avatar-btn';
+    btn.innerHTML = `
+      <span class="home-avatar-letter">${session.name.charAt(0).toUpperCase()}</span>
+      <span class="home-avatar-name">${session.name}</span>
+      <svg class="home-avatar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>`;
+    btn.title = session.name;
+
+    const drop = document.createElement('div');
+    drop.id = 'userDropdown';
+    drop.className = 'user-dropdown';
+    drop.innerHTML = `
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-name">${session.name}</div>
+        <div class="user-dropdown-login">@${session.login}</div>
+      </div>
+      <button class="user-dropdown-item home-theme-menu-item" id="dropTheme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        Змінити тему
+      </button>
+      <button class="user-dropdown-item" id="dropMyBookings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Мої записи
+      </button>
+      <button class="user-dropdown-item danger" id="dropLogout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Вийти
+      </button>`;
+    wrap.appendChild(drop);
+
+    btn.onclick = e => { e.preventDefault(); e.stopPropagation(); drop.classList.toggle('open'); };
+    drop.querySelector('#dropMyBookings').onclick = () => { drop.classList.remove('open'); openMyBookings(); };
+    drop.querySelector('#dropLogout').onclick = () => { clearSession(); location.reload(); };
+    drop.querySelector('#dropTheme').onclick = () => { drop.classList.remove('open'); /* тема — заглушка */ };
+
+    setTimeout(() => {
+      document.addEventListener('click', function handler(e) {
+        if (!wrap.contains(e.target)) { drop.classList.remove('open'); document.removeEventListener('click', handler); }
+      });
+    }, 0);
+  } else {
+    btn.className = 'nav-btn secondary-btn';
+    btn.textContent = 'Вхід';
+    btn.title = '';
+    btn.style.textDecoration = 'none';
+    btn.onclick = e => { e.preventDefault(); openLogin(); };
+  }
+}
+
+updateLoginBtn();
+</script>
+
+<script>
+/* ── Rotating subtitle ── */
+const subtitles = [
+  'Обирай зручний час, потрібну аудиторію та записуйся онлайн всього за пару кліків.',
+  'Переглядай доступні комп\'ютерні аудиторії та їх характеристики в одному місці.',
+  'Швидке бронювання — від вибору аудиторії до підтвердження за кілька кліків.',
+  'Зручний запис у комп\'ютерні класи без черг та зайвих дзвінків — все онлайн у кілька кроків.',
+];
+
+let subIdx = 0;
+const subEl = document.getElementById('heroSubtitle');
+const dots  = document.querySelectorAll('#heroDots .home-dot');
+
+function updateDots(idx) {
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+function nextSubtitle() {
+  subEl.classList.remove('subtitle-visible');
+  subEl.classList.add('subtitle-hidden');
+
+  setTimeout(() => {
+    subIdx = (subIdx + 1) % subtitles.length;
+    subEl.textContent = subtitles[subIdx];
+    updateDots(subIdx);
+    subEl.classList.remove('subtitle-hidden');
+    subEl.classList.add('subtitle-visible');
+  }, 500);
+}
+
+subEl.classList.add('subtitle-visible');
+updateDots(0);
+setInterval(nextSubtitle, 4000);
+
+// Клік по dot — ручне перемикання
+dots.forEach((d, i) => {
+  d.style.cursor = 'pointer';
+  d.addEventListener('click', () => {
+    subEl.classList.remove('subtitle-visible');
+    subEl.classList.add('subtitle-hidden');
+    setTimeout(() => {
+      subIdx = i;
+      subEl.textContent = subtitles[subIdx];
+      updateDots(subIdx);
+      subEl.classList.remove('subtitle-hidden');
+      subEl.classList.add('subtitle-visible');
+    }, 500);
+  });
+});
+</script>
+
+<script>
+/* ══════════════════════════════════════
+   DARK THEME
+══════════════════════════════════════ */
+const THEME_KEY = 'kefk-theme';
+
+function applyTheme(dark) {
+  document.body.classList.toggle('dark-theme', dark);
+  document.getElementById('themeIconSun').style.display  = dark ? 'none'  : '';
+  document.getElementById('themeIconMoon').style.display = dark ? ''      : 'none';
+  localStorage.setItem(THEME_KEY, dark ? 'dark' : 'light');
+}
+
+// Ініціалізація
+const savedTheme = localStorage.getItem(THEME_KEY);
+applyTheme(savedTheme === 'dark');
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  applyTheme(!document.body.classList.contains('dark-theme'));
+});
+
+// Також в дропдауні (якщо є)
+document.addEventListener('click', e => {
+  if (e.target.closest('#dropTheme')) {
+    applyTheme(!document.body.classList.contains('dark-theme'));
+  }
+});
+
+/* ══════════════════════════════════════
+   PARTICLES + GRADIENT BACKGROUND
+══════════════════════════════════════ */
+(function () {
+  const canvas = document.getElementById('home-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+
+  // Партикли
+  const COUNT = 55;
+  const particles = Array.from({ length: COUNT }, () => ({
+    x:    Math.random(),
+    y:    Math.random(),
+    r:    rnd(1.5, 4),
+    vx:   rnd(-0.06, 0.06),
+    vy:   rnd(-0.08, -0.02),
+    a:    rnd(0.3, 0.8),
+    va:   rnd(-0.003, 0.003),
+  }));
+
+  // Лінії між близькими партиклами
+  const MAX_DIST = 0.18;
+
+  let t = 0;
+
+  function isDark() {
+    return document.body.classList.contains('dark-theme');
+  }
+
+  function draw() {
+    t += 0.008;
+    ctx.clearRect(0, 0, W, H);
+
+    const dark = isDark();
+
+    // Градієнт фону
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    if (dark) {
+      bg.addColorStop(0,   '#0d0d1a');
+      bg.addColorStop(0.5, '#111128');
+      bg.addColorStop(1,   '#0a0a1f');
+    } else {
+      bg.addColorStop(0,   '#f0f2ff');
+      bg.addColorStop(0.5, '#e8eaff');
+      bg.addColorStop(1,   '#eef0fb');
+    }
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Великий м'який градієнтний blob зліва вгорі
+    const blob1 = ctx.createRadialGradient(W * 0.1, H * 0.2, 0, W * 0.1, H * 0.2, W * 0.4);
+    if (dark) {
+      blob1.addColorStop(0, 'rgba(99,102,241,0.18)');
+      blob1.addColorStop(1, 'rgba(99,102,241,0)');
+    } else {
+      blob1.addColorStop(0, 'rgba(99,102,241,0.12)');
+      blob1.addColorStop(1, 'rgba(99,102,241,0)');
+    }
+    ctx.fillStyle = blob1;
+    ctx.fillRect(0, 0, W, H);
+
+    // Blob справа внизу
+    const blob2 = ctx.createRadialGradient(W * 0.9, H * 0.8, 0, W * 0.9, H * 0.8, W * 0.35);
+    if (dark) {
+      blob2.addColorStop(0, 'rgba(139,92,246,0.15)');
+      blob2.addColorStop(1, 'rgba(139,92,246,0)');
+    } else {
+      blob2.addColorStop(0, 'rgba(139,92,246,0.10)');
+      blob2.addColorStop(1, 'rgba(139,92,246,0)');
+    }
+    ctx.fillStyle = blob2;
+    ctx.fillRect(0, 0, W, H);
+
+    // Оновлення партиклів
+    particles.forEach(p => {
+      p.x += p.vx * 0.001;
+      p.y += p.vy * 0.001;
+      p.a += p.va;
+      if (p.a < 0.15) { p.a = 0.15; p.va *= -1; }
+      if (p.a > 0.85) { p.a = 0.85; p.va *= -1; }
+      if (p.x < -0.05) p.x = 1.05;
+      if (p.x > 1.05)  p.x = -0.05;
+      if (p.y < -0.05) p.y = 1.05;
+      if (p.y > 1.05)  p.y = -0.05;
+    });
+
+    // Лінії між партиклами
+    const lineColor = dark ? '139,92,246' : '99,102,241';
+    for (let i = 0; i < COUNT; i++) {
+      for (let j = i + 1; j < COUNT; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < MAX_DIST) {
+          const alpha = (1 - dist / MAX_DIST) * 0.25;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x * W, particles[i].y * H);
+          ctx.lineTo(particles[j].x * W, particles[j].y * H);
+          ctx.strokeStyle = `rgba(${lineColor},${alpha})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Самі партикли
+    const dotColor = dark ? '167,139,250' : '99,102,241';
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x * W, p.y * H, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${dotColor},${p.a})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+</script>
+
+</body>
+</html>
