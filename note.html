@@ -13,11 +13,12 @@
 <!-- ═══ ШАПКА ═══ -->
 <header class="home-header">
   <div class="home-nav">
-    <div class="home-header-left" style="display:flex; align-items:center; gap:15px;">
-      <a href="zero.html" class="rooms-back-btn" style="border:none; padding:8px;">
+    <div class="home-header-left" style="display:flex; align-items:center; gap:12px;">
+      <a href="zero.html" class="rooms-back-btn">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        <span class="back-btn-text">На головну</span>
       </a>
-      <div class="month-nav" style="border:none;">
+      <div class="month-nav">
         <button class="month-arrow" id="prevMonth">&#8249;</button>
         <button class="month-title-btn" id="monthTitle" onclick="openMonthPicker()"></button>
         <button class="month-arrow" id="nextMonth">&#8250;</button>
@@ -210,12 +211,84 @@ window.submitLogin = async function() {
     }
 
     closeLogin();
-    location.reload();
+    updateLoginBtn();
   } catch (e) {
     document.getElementById('loginError').textContent = "Помилка входу: " + e.message;
     document.getElementById('loginError').style.display = 'block';
   }
 }
+
+window.updateLoginBtn = function() {
+  const session = getSession();
+  const btn = document.getElementById('openLogin');
+  const wrap = document.getElementById('authWrap');
+  const old = document.getElementById('userDropdown');
+  if (old) old.remove();
+
+  if (session) {
+    const displayName = session.name || "Користувач";
+    btn.className = 'home-avatar-btn';
+    btn.innerHTML = `
+      <span class="home-avatar-letter">${displayName.charAt(0).toUpperCase()}</span>
+      <span class="home-avatar-name">${displayName}</span>
+      <svg class="home-avatar-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>`;
+    btn.title = displayName;
+
+    const drop = document.createElement('div');
+    drop.id = 'userDropdown';
+    drop.className = 'user-dropdown';
+    drop.innerHTML = `
+      <div class="user-dropdown-info">
+        <div class="user-dropdown-name">${displayName}</div>
+        <div class="user-dropdown-login">@${session.login}</div>
+      </div>
+      <button class="user-dropdown-item" id="dropTheme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        </svg>
+        Змінити тему
+      </button>
+      ${session.role === 'admin' ? `
+        <a href="admin.html" class="user-dropdown-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/>
+          </svg>
+          Панель адміністратора
+        </a>` : ''}
+      <button class="user-dropdown-item" id="dropMyBookings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Мої записи
+      </button>
+      <button class="user-dropdown-item danger" id="dropLogout">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Вийти
+      </button>`;
+    wrap.appendChild(drop);
+
+    btn.onclick = e => { e.preventDefault(); e.stopPropagation(); drop.classList.toggle('open'); };
+    drop.querySelector('#dropMyBookings').onclick = () => { drop.classList.remove('open'); openMyBookings(); };
+    drop.querySelector('#dropLogout').onclick = () => { clearSession(); location.reload(); };
+    drop.querySelector('#dropTheme').onclick = () => { 
+      applyTheme(!document.body.classList.contains('dark-theme')); 
+      drop.classList.remove('open'); 
+    };
+
+    setTimeout(() => {
+      document.addEventListener('click', function handler(e) {
+        if (!wrap.contains(e.target)) { drop.classList.remove('open'); document.removeEventListener('click', handler); }
+      });
+    }, 0);
+  } else {
+    btn.className = 'nav-btn secondary-btn';
+    btn.textContent = 'Вхід';
+    btn.onclick = e => { e.preventDefault(); openLogin(); };
+  }
+}
+
+updateLoginBtn();
 
 const ROW_H = 110; // Константа висоти рядка для десктопа
 let _allTeachers = [];
